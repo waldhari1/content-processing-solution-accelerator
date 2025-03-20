@@ -69,6 +69,7 @@ param minReplicaContainerWeb int = 1
 @description('Maximum number of replicas to be added for Container Web App')
 param maxReplicaContainerWeb int = 1
 
+@description('Set this flag to true only if you are deplpoying from Local')
 param useLocalBuild string = 'false'
 
 var containerImageEndPoint = 'cpscontainerreg.azurecr.io'

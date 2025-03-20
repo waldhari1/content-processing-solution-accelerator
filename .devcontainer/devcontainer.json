@@ -51,7 +51,7 @@
         "UV_LINK_MODE": "copy",
         "UV_PROJECT_ENVIRONMENT": "/home/vscode/.venv"
     },
-    "postCreateCommand": "sed -i 's/\r$//' ./setupEnv.sh && sh ./setupEnv.sh",
+    "postCreateCommand": "sed -i 's/\r$//' ./.devcontainer/setupEnv.sh && sh ./.devcontainer/setupEnv.sh",
     "remoteEnv": {
         "PYTHONPATH": "/home/vscode/.venv/bin"
     }
