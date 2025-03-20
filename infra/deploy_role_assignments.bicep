@@ -1,13 +1,15 @@
-param conainerAppPrincipalIds array  // List of user/service principal IDs
-param containerApiPrincipalId string  // API principal ID
-param containerAppPrincipalId string  // APP principal ID
+param conainerAppPrincipalIds array // List of user/service principal IDs
+param containerApiPrincipalId string // API principal ID
+param containerAppPrincipalId string // APP principal ID
 
-param appConfigResourceId string  // Resource ID of the App Configuration instance
-param storageResourceId string  // Resource ID of the Storage account
-param storagePrincipalId string  // Resource ID of the Storage account
+param appConfigResourceId string // Resource ID of the App Configuration instance
+param storageResourceId string // Resource ID of the Storage account
+param storagePrincipalId string // Resource ID of the Storage account
 
 param aiServiceCUId string // Resource ID of the Content Understanding Service
 param aiServiceId string // Resource ID of the Open AI service
+
+param containerRegistryReaderPrincipalId string
 
 resource appConfigDataReader 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
   scope: resourceGroup()
@@ -34,7 +36,7 @@ resource cognitiveServicesOpenAIUserRole 'Microsoft.Authorization/roleDefinition
   scope: resourceGroup()
 }
 
-resource roleAssignments 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = [ 
+resource roleAssignments 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = [
   for principalId in conainerAppPrincipalIds: {
     name: guid('${appConfigResourceId}-${principalId}', appConfigDataReader.id)
     scope: resourceGroup()
@@ -126,5 +128,17 @@ resource cognitiveServicesUserRoleAssignment 'Microsoft.Authorization/roleAssign
     principalId: containerAppPrincipalId
     roleDefinitionId: cognitiveServicesUserRole.id
     principalType: 'ServicePrincipal'
+  }
+}
+
+resource acrPullRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(containerRegistryReaderPrincipalId, 'acrpull')
+  scope: resourceGroup()
+  properties: {
+    roleDefinitionId: subscriptionResourceId(
+      'Microsoft.Authorization/roleDefinitions',
+      '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+    ) // AcrPull role
+    principalId: containerRegistryReaderPrincipalId
   }
 }

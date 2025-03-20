@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.33.93.31351",
-      "templateHash": "18281746313933313941"
+      "templateHash": "7836259803917307200"
     }
   },
   "parameters": {
@@ -27,9 +27,9 @@
     "contentUnderstandingLocation": {
       "type": "string",
       "allowedValues": [
-        "West US",
-        "Sweden Central",
-        "Australia East"
+        "WestUS",
+        "SwedenCentral",
+        "AustraliaEast"
       ],
       "metadata": {
         "azd": {
@@ -773,7 +773,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.33.93.31351",
-              "templateHash": "16057206178063137496"
+              "templateHash": "10635563035313821837"
             }
           },
           "parameters": {
@@ -794,7 +794,7 @@
             }
           },
           "variables": {
-            "saNameCleaned": "[replace(parameters('saName'), '-', '')]"
+            "saNameCleaned": "[take(replace(parameters('saName'), '-', ''), 24)]"
           },
           "resources": [
             {
@@ -1644,9 +1644,6 @@
         },
         "mode": "Incremental",
         "parameters": {
-          "azureContainerRegistry": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_registry'), '2022-09-01').outputs.acrEndpoint.value]"
-          },
           "solutionName": {
             "value": "[variables('solutionPrefix')]"
           },
@@ -1667,7 +1664,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.33.93.31351",
-              "templateHash": "7260583692143616076"
+              "templateHash": "6312132419145754805"
             }
           },
           "parameters": {
@@ -1678,9 +1675,6 @@
               "type": "string"
             },
             "location": {
-              "type": "string"
-            },
-            "azureContainerRegistry": {
               "type": "string"
             },
             "logAnalyticsWorkspaceName": {
@@ -1697,18 +1691,6 @@
                 "app": "[parameters('solutionName')]",
                 "location": "[parameters('location')]"
               }
-            },
-            {
-              "type": "Microsoft.Authorization/roleAssignments",
-              "apiVersion": "2022-04-01",
-              "name": "[guid(parameters('azureContainerRegistry'), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', format('{0}-acr-managed-identity', parameters('solutionName'))), 'acrpull')]",
-              "properties": {
-                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
-                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', format('{0}-acr-managed-identity', parameters('solutionName'))), '2023-01-31').principalId]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', format('{0}-acr-managed-identity', parameters('solutionName')))]"
-              ]
             },
             {
               "type": "Microsoft.App/managedEnvironments",
@@ -1742,13 +1724,16 @@
             "containerRegistryReaderId": {
               "type": "string",
               "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', format('{0}-acr-managed-identity', parameters('solutionName')))]"
+            },
+            "containerRegistryReaderPrincipalId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', format('{0}-acr-managed-identity', parameters('solutionName'))), '2023-01-31').principalId]"
             }
           }
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'deploy_app_insights')]",
-        "[resourceId('Microsoft.Resources/deployments', 'deploy_container_registry')]"
+        "[resourceId('Microsoft.Resources/deployments', 'deploy_app_insights')]"
       ]
     },
     {
@@ -1776,7 +1761,9 @@
           "containerAppWebEndpoint": {
             "value": ""
           },
-          "azureContainerRegistry": "[if(equals(parameters('useLocalBuild'), 'true'), createObject('value', reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_registry'), '2022-09-01').outputs.acrEndpoint.value), createObject('value', variables('containerImageEndPoint')))]",
+          "azureContainerRegistry": {
+            "value": "[variables('containerImageEndPoint')]"
+          },
           "containerAppEnvId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_app_env'), '2022-09-01').outputs.containerEnvId.value]"
           },
@@ -1802,7 +1789,7 @@
             "value": "[parameters('maxReplicaContainerWeb')]"
           },
           "useLocalBuild": {
-            "value": "[parameters('useLocalBuild')]"
+            "value": "false"
           }
         },
         "template": {
@@ -2737,8 +2724,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'deploy_container_app_env')]",
-        "[resourceId('Microsoft.Resources/deployments', 'deploy_container_registry')]"
+        "[resourceId('Microsoft.Resources/deployments', 'deploy_container_app_env')]"
       ]
     },
     {
@@ -2768,7 +2754,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.33.93.31351",
-              "templateHash": "10712897050738603499"
+              "templateHash": "10151972800818695845"
             }
           },
           "parameters": {
@@ -2792,42 +2778,7 @@
               "defaultValue": {}
             }
           },
-          "variables": {
-            "databaseName": "ContentProcess",
-            "collectionNameProcess": "Processes",
-            "collectionNameSchema": "Schemas",
-            "containers": [
-              {
-                "name": "[variables('collectionNameProcess')]",
-                "id": "[variables('collectionNameProcess')]",
-                "partitionKey": "/userId"
-              },
-              {
-                "name": "[variables('collectionNameSchema')]",
-                "id": "[variables('collectionNameSchema')]",
-                "partitionKey": "/userId"
-              }
-            ]
-          },
           "resources": [
-            {
-              "copy": {
-                "name": "database::list",
-                "count": "[length(variables('containers'))]"
-              },
-              "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
-              "apiVersion": "2024-12-01-preview",
-              "name": "[format('{0}/{1}/{2}', parameters('cosmosAccountName'), variables('databaseName'), variables('containers')[copyIndex()].name)]",
-              "properties": {
-                "resource": {
-                  "id": "[variables('containers')[copyIndex()].id]"
-                },
-                "options": {}
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('cosmosAccountName'), variables('databaseName'))]"
-              ]
-            },
             {
               "type": "Microsoft.DocumentDB/databaseAccounts",
               "apiVersion": "2024-12-01-preview",
@@ -2854,29 +2805,12 @@
                 "capacityMode": "Serverless",
                 "enableFreeTier": false
               }
-            },
-            {
-              "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases",
-              "apiVersion": "2024-12-01-preview",
-              "name": "[format('{0}/{1}', parameters('cosmosAccountName'), variables('databaseName'))]",
-              "properties": {
-                "resource": {
-                  "id": "[variables('databaseName')]"
-                }
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosAccountName'))]"
-              ]
             }
           ],
           "outputs": {
             "cosmosAccountName": {
               "type": "string",
               "value": "[parameters('cosmosAccountName')]"
-            },
-            "cosmosDatabaseName": {
-              "type": "string",
-              "value": "[variables('databaseName')]"
             }
           }
         }
@@ -3161,6 +3095,9 @@
           },
           "aiServiceId": {
             "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_ai_foundry'), '2022-09-01').outputs.aiServicesId.value]"
+          },
+          "containerRegistryReaderPrincipalId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_app_env'), '2022-09-01').outputs.containerRegistryReaderPrincipalId.value]"
           }
         },
         "template": {
@@ -3170,7 +3107,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.33.93.31351",
-              "templateHash": "4550492975863569639"
+              "templateHash": "2202804532336229531"
             }
           },
           "parameters": {
@@ -3196,6 +3133,9 @@
               "type": "string"
             },
             "aiServiceId": {
+              "type": "string"
+            },
+            "containerRegistryReaderPrincipalId": {
               "type": "string"
             }
           },
@@ -3296,6 +3236,15 @@
                 "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', 'a97b65f3-24c7-4388-baec-2e87135dc908')]",
                 "principalType": "ServicePrincipal"
               }
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "name": "[guid(parameters('containerRegistryReaderPrincipalId'), 'acrpull')]",
+              "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
+                "principalId": "[parameters('containerRegistryReaderPrincipalId')]"
+              }
             }
           ]
         }
@@ -3303,6 +3252,7 @@
       "dependsOn": [
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_ai_foundry')]",
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_app_config_service')]",
+        "[resourceId('Microsoft.Resources/deployments', 'deploy_container_app_env')]",
         "[resourceId('Microsoft.Resources/deployments', 'deploy_container_app_api_web')]",
         "[resourceId('Microsoft.Resources/deployments', 'deploy_storage_account')]"
       ]

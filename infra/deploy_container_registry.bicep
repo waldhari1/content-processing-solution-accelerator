@@ -7,7 +7,7 @@ param environmentName string
 var uniqueId = toLower(uniqueString(subscription().id, environmentName, resourceGroup().location))
 var solutionName = 'cps-${padLeft(take(uniqueId, 12), 12, '0')}'
 
-var containerNameCleaned = replace('cr${ solutionName }', '-', '')
+var containerNameCleaned = replace('cr${solutionName }', '-', '')
 
 @description('Provide a location for the registry.')
 param location string = resourceGroup().location

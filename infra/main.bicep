@@ -14,10 +14,7 @@ param secondaryLocation string = 'EastUs2'
 
 @minLength(1)
 @description('Location for the Content Understanding service deployment:')
-@allowed(['West US'
-'Sweden Central' 
-'Australia East'
-])
+@allowed(['WestUS', 'SwedenCentral', 'AustraliaEast'])
 @metadata({
   azd: {
     type: 'location'
@@ -97,7 +94,7 @@ module kvault 'deploy_keyvault.bicep' = {
   params: {
     solutionLocation: resourceGroupLocation
     keyvaultName: '${abbrs.security.keyVault}${solutionPrefix}'
-    managedIdentityObjectId:managedIdentityModule.outputs.managedIdentityOutput.objectId
+    managedIdentityObjectId: managedIdentityModule.outputs.managedIdentityOutput.objectId
   }
   scope: resourceGroup(resourceGroup().name)
 }
@@ -141,8 +138,8 @@ module aifoundry 'deploy_ai_foundry.bicep' = {
     gptModelName: gptModelName
     gptModelVersion: gptModelVersion
     gptDeploymentCapacity: gptDeploymentCapacity
-    managedIdentityObjectId:managedIdentityModule.outputs.managedIdentityOutput.objectId
-    containerRegistryId:containerRegistry.outputs.createdAcrId
+    managedIdentityObjectId: managedIdentityModule.outputs.managedIdentityOutput.objectId
+    containerRegistryId: containerRegistry.outputs.createdAcrId
     applicationInsightsId: applicationInsights.outputs.id
   }
   scope: resourceGroup(resourceGroup().name)
@@ -151,7 +148,6 @@ module aifoundry 'deploy_ai_foundry.bicep' = {
 module containerAppEnv './container_app/deploy_container_app_env.bicep' = {
   name: 'deploy_container_app_env'
   params: {
-    azureContainerRegistry: containerRegistry.outputs.acrEndpoint
     solutionName: solutionPrefix
     containerEnvName: '${abbrs.containers.containerAppsEnvironment}${solutionPrefix}'
     location: secondaryLocation
@@ -161,13 +157,13 @@ module containerAppEnv './container_app/deploy_container_app_env.bicep' = {
 
 module containerApps './container_app/deploy_container_app_api_web.bicep' = {
   name: 'deploy_container_app_api_web'
-  params:{
+  params: {
     solutionName: solutionPrefix
     location: secondaryLocation
     appConfigEndPoint: ''
     containerAppApiEndpoint: ''
     containerAppWebEndpoint: ''
-    azureContainerRegistry: useLocalBuild == 'true' ? containerRegistry.outputs.acrEndpoint : containerImageEndPoint
+    azureContainerRegistry: containerImageEndPoint
     containerAppEnvId: containerAppEnv.outputs.containerEnvId
     containerRegistryReaderId: containerAppEnv.outputs.containerRegistryReaderId
     minReplicaContainerApp: minReplicaContainerApp
@@ -176,7 +172,7 @@ module containerApps './container_app/deploy_container_app_api_web.bicep' = {
     maxReplicaContainerApi: maxReplicaContainerApi
     minReplicaContainerWeb: minReplicaContainerWeb
     maxReplicaContainerWeb: maxReplicaContainerWeb
-    useLocalBuild: useLocalBuild
+    useLocalBuild: 'false'
   }
 }
 
@@ -212,13 +208,18 @@ module roleAssignments 'deploy_role_assignments.bicep' = {
   name: 'deploy_role_assignments'
   params: {
     appConfigResourceId: appconfig.outputs.appConfigId
-    conainerAppPrincipalIds: [containerApps.outputs.containerAppPrincipalId, containerApps.outputs.containerAppApiPrincipalId, containerApps.outputs.containerAppWebPrincipalId]
+    conainerAppPrincipalIds: [
+      containerApps.outputs.containerAppPrincipalId
+      containerApps.outputs.containerAppApiPrincipalId
+      containerApps.outputs.containerAppWebPrincipalId
+    ]
     storageResourceId: storage.outputs.storageId
     storagePrincipalId: storage.outputs.storagePrincipalId
     containerApiPrincipalId: containerApps.outputs.containerAppApiPrincipalId
     containerAppPrincipalId: containerApps.outputs.containerAppPrincipalId
     aiServiceCUId: aifoundry.outputs.aiServicesCuId
     aiServiceId: aifoundry.outputs.aiServicesId
+    containerRegistryReaderPrincipalId: containerAppEnv.outputs.containerRegistryReaderPrincipalId
   }
 }
 

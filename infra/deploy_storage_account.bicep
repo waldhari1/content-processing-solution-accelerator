@@ -6,7 +6,7 @@ param solutionLocation string
 
 @description('Name')
 param saName string
-var saNameCleaned = replace(saName, '-', '')
+var saNameCleaned = take(replace(saName, '-', ''), 24)
 
 param managedIdentityObjectId string
 
@@ -18,7 +18,7 @@ resource storageAccounts_resource 'Microsoft.Storage/storageAccounts@2022-09-01'
   }
   kind: 'StorageV2'
   identity: {
-    type:'SystemAssigned'
+    type: 'SystemAssigned'
   }
   properties: {
     minimumTlsVersion: 'TLS1_2'
@@ -62,7 +62,6 @@ resource storageAccounts_resource 'Microsoft.Storage/storageAccounts@2022-09-01'
 //   }
 // }
 
-
 // resource storageAccounts_default_data 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
 //   parent: storageAccounts_default
 //   name: 'data'
@@ -86,8 +85,8 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(resourceGroup().id, managedIdentityObjectId, blobDataContributor.id)
   properties: {
     principalId: managedIdentityObjectId
-    roleDefinitionId:blobDataContributor.id
-    principalType: 'ServicePrincipal' 
+    roleDefinitionId: blobDataContributor.id
+    principalType: 'ServicePrincipal'
   }
 }
 

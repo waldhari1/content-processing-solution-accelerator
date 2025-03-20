@@ -1,9 +1,6 @@
 param solutionName string
-param containerEnvName string 
+param containerEnvName string
 param location string
-
-// Container related params
-param azureContainerRegistry string
 
 param logAnalyticsWorkspaceName string
 
@@ -12,7 +9,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09
 }
 
 resource containerRegistryReader 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
-  name: '${ solutionName }-acr-managed-identity'
+  name: '${solutionName }-acr-managed-identity'
   location: location
   tags: {
     app: solutionName
@@ -20,14 +17,14 @@ resource containerRegistryReader 'Microsoft.ManagedIdentity/userAssignedIdentiti
   }
 }
 
-resource acrPullRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(azureContainerRegistry, containerRegistryReader.id, 'acrpull')
-  scope: resourceGroup()
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d') // AcrPull role
-    principalId: containerRegistryReader.properties.principalId
-  }
-}
+// resource acrPullRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+//   name: guid(azureContainerRegistry, containerRegistryReader.id, 'acrpull')
+//   scope: resourceGroup()
+//   properties: {
+//     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d') // AcrPull role
+//     principalId: containerRegistryReader.properties.principalId
+//   }
+// }
 
 resource containerAppEnv 'Microsoft.App/managedEnvironments@2024-03-01' = {
   name: containerEnvName
@@ -53,3 +50,4 @@ resource containerAppEnv 'Microsoft.App/managedEnvironments@2024-03-01' = {
 
 output containerEnvId string = containerAppEnv.id
 output containerRegistryReaderId string = containerRegistryReader.id
+output containerRegistryReaderPrincipalId string = containerRegistryReader.properties.principalId
