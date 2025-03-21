@@ -1,0 +1,17 @@
+.JSONEditorClass {
+    max-width: 100% important;
+    max-height: none !important;
+}
+
+textarea {
+    max-width: 100% !important;
+    max-height: none !important;
+
+}
+
+.JSONEditorLoader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}

@@ -1,0 +1,86 @@
+trigger:
+  - main
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  imageName: "contentprocessorapi"
+  acrName: "acrcpsdev" # Replace with your Azure Container Registry name
+  acrLoginServer: "acrcpsdev.azurecr.io" # Replace with your ACR login server (e.g., youracrname.azurecr.io)
+  resourceGroupName: "rg-cps-dev" # Replace with your resource group name
+  containerAppName: "cps-processorapi"
+  environmentName: "cps-env-containerapp"
+  managedIdentityName: "mid-CICD"
+  APP_CONFIG_ENDPOINT: "https://cps-appconfig.azconfig.io"
+
+steps:
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: "csacto-connection" # Replace with your Azure Classic service connection name
+      scriptType: "bash"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        # Log in to Azure Container Registry
+        az acr login --name $(acrName)
+
+        # Build the Docker image
+        docker build -t $(acrLoginServer)/$(imageName):$(Build.BuildId) .
+
+        # Push the Docker image to ACR
+        docker push $(acrLoginServer)/$(imageName):$(Build.BuildId)
+    displayName: "Build and push Docker image"
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: "csacto-connection" # Replace with your Azure Classic service connection name
+      scriptType: "bash"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        az acr repository show-tags --name $(acrName) --repository $(imageName) --output table
+    displayName: "List ACR repository tags"
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: "csacto-connection" # Replace with your Azure Classic service connection name
+      scriptType: "bash"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        # Get the resource ID for the managed identity
+        managedIdentityResourceId=$(az identity show --name $(managedIdentityName) --resource-group $(resourceGroupName) --query 'id' -o tsv)
+
+        # Check if the container app exists
+        if az containerapp show --name $(containerAppName) --resource-group $(resourceGroupName); then
+          # Update the container app with the new image
+          az containerapp update \
+            --name $(containerAppName) \
+            --resource-group $(resourceGroupName) \
+            --image $(acrLoginServer)/$(imageName):$(Build.BuildId) \
+            --set-env-vars 'APP_CONFIG_ENDPOINT=https://cps-appconfig.azconfig.io'
+        else
+          # Create the container app with the new image and registry settings
+          az containerapp create \
+            --name $(containerAppName) \
+            --resource-group $(resourceGroupName) \
+            --environment $(environmentName) \
+            --image $(acrLoginServer)/$(imageName):$(Build.BuildId) \
+            --cpu 4.0 \
+            --memory 8.0Gi \
+            --registry-server $(acrLoginServer) \
+            --registry-identity $managedIdentityResourceId \
+            --ingress external \
+            --env-vars 'APP_CONFIG_ENDPOINT=https://cps-appconfig.azconfig.io'
+        fi
+
+        # Update the container app with the startup probe settings
+        az containerapp update \
+          --name $(containerAppName) \
+          --resource-group $(resourceGroupName) \
+          --set \
+            properties.template.containers.probes.type="Startup" \
+            properties.template.containers.probes.httpGet.path="/startup" \
+            properties.template.containers.probes.httpGet.port=80 \
+            properties.template.containers.probes.initialDelaySeconds=20 \
+            properties.template.containers.probes.periodSeconds=5 \
+            properties.template.containers.probes.failureThreshold=30
+    displayName: "Deploy container to Azure Container App"
