@@ -1,0 +1,16 @@
+{
+    "eslint.validate": [
+        "javascript",
+        "typescript"
+    ],
+    "eslint.workingDirectories": [
+        {
+            "directory": "./src",
+            "changeProcessCWD": true
+        }
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "githubPullRequests.ignoredPullRequestBranches": [
+        "main"
+    ]
+}
