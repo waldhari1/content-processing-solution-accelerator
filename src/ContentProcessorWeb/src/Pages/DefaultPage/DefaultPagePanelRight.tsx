@@ -37,7 +37,7 @@ const PanelRight: React.FC<PanelRightProps> = () => {
 
   return (
     <div className="panelRight">
-      <PanelToolbar icon={null} header="Source Content"></PanelToolbar>
+      <PanelToolbar icon={null} header="Source Document"></PanelToolbar>
 
       <div className="panelRightContent">
         {

@@ -63,7 +63,8 @@ const UploadFilesModal: React.FC<UploadFilesModalProps> = ({ open, onClose }) =>
 
   const store = useSelector((state: RootState) => ({
     schemaSelectedOption: state.leftPanel.schemaSelectedOption,
-    page_size: state.leftPanel.gridData.page_size
+    page_size: state.leftPanel.gridData.page_size,
+    pageSize: state.leftPanel.pageSize
   }), shallowEqual);
 
   const isFileDuplicate = (newFile: File) => {
@@ -172,7 +173,7 @@ const UploadFilesModal: React.FC<UploadFilesModalProps> = ({ open, onClose }) =>
       if (fileInputRef.current) {
         fileInputRef.current.value = '';  // Reset the file input
       }
-      dispatch(fetchContentTableData({ pageSize: store.page_size, pageNumber: 1 })).unwrap();
+      dispatch(fetchContentTableData({ pageSize: store.pageSize, pageNumber: 1 })).unwrap();
     }
   };
 

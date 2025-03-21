@@ -11,7 +11,8 @@ interface LeftPanelState {
     schemaSelectedOption: any;
     gridData: any;
     processId: string | null;
-    selectedItem: any
+    selectedItem: any;
+    pageSize : number;
 }
 
 interface UploadMetadata {
@@ -89,7 +90,8 @@ const initialState: LeftPanelState = {
 
     gridData: {...gridDefaultVal},
     processId: null,
-    selectedItem: {}
+    selectedItem: {},
+    pageSize : 500,
 };
 
 const leftPanelSlice = createSlice({

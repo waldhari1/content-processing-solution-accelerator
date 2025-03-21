@@ -36,7 +36,7 @@ export const fetchProcessSteps = createAsyncThunk<any, { processId: string | nul
     return response;
 });
 
-export const saveContentJson = createAsyncThunk<any, { processId: string | null, contentJson: string, comments: string }>('SaveContentJSON-Comments', async ({ processId, contentJson, comments }) => {
+export const saveContentJson = createAsyncThunk<any, { processId: string | null, contentJson: string, comments: string ,savedComments: string }>('SaveContentJSON-Comments', async ({ processId, contentJson, comments ,savedComments }) => {
     try {
         if (!processId) throw new Error("Process ID is required");
 
@@ -51,7 +51,7 @@ export const saveContentJson = createAsyncThunk<any, { processId: string | null,
                 })
             );
         }
-        if (comments.trim() !== '') {
+        if (comments.trim() !== '' || (savedComments!='' && comments.trim()=='') ) {
             requests.push(
                 httpUtility.put(url, {
                     process_id: processId,
@@ -88,6 +88,9 @@ const centerPanelSlice = createSlice({
     reducers: {
         setModifiedResult: (state, action) => {
             state.modified_result = action.payload;
+        },
+        setUpdateComments :  (state, action) => {
+           state.comments = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -111,7 +114,7 @@ const centerPanelSlice = createSlice({
             });
 
         builder
-            .addCase(saveContentJson.pending, (state) => {
+            .addCase(saveContentJson.pending, (state,action) => {
                 state.modified_result = {};
                 state.isSavingInProgress = true;
             })
@@ -143,5 +146,5 @@ const centerPanelSlice = createSlice({
     },
 });
 
-export const { setModifiedResult } = centerPanelSlice.actions;
+export const { setModifiedResult ,setUpdateComments} = centerPanelSlice.actions;
 export default centerPanelSlice.reducer;

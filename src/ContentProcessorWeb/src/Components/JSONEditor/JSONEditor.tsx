@@ -61,8 +61,9 @@ const JSONEditor: React.FC<JSONEditorProps> = () => {
           //setData={ setJsonData } // optional
           restrictEdit={({ key, path, level, index, value, size, parentData, fullData, collapsed }) => {
             return !path.includes('extracted_result')
+            }
           }
-          }
+          restrictDelete={true}
         />
     }</>
   )

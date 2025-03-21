@@ -19,7 +19,7 @@ import PanelToolbar from "../../Hooks/usePanelHooks.tsx";
 import JSONEditor from "../../Components/JSONEditor/JSONEditor"
 
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { saveContentJson, fetchProcessSteps } from '../../store/slices/centerPanelSlice';
+import { saveContentJson, fetchProcessSteps ,setUpdateComments } from '../../store/slices/centerPanelSlice';
 import { RootState, AppDispatch } from '../../store';
 import { startLoader, stopLoader } from "../../store/slices/loaderSlice.ts";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -229,7 +229,8 @@ const ContentDevelopers: React.FC<ContentProps> = ({
   const handleSave = async () => {
     try {
       dispatch(startLoader("1"));
-      await dispatch(saveContentJson({ 'processId': selectedProcessId, 'contentJson': store.modified_result.extracted_result, 'comments': comment }))
+      dispatch(setUpdateComments(comment))
+      await dispatch(saveContentJson({ 'processId': selectedProcessId, 'contentJson': store.modified_result.extracted_result, 'comments': comment , 'savedComments': store.comments }))
     } catch (error) {
       console.error('API Error:', error);
     } finally {
@@ -241,12 +242,13 @@ const ContentDevelopers: React.FC<ContentProps> = ({
     if(status.includes(store.selectedItem.status)) return true;
     if (Object.keys(store.modified_result).length > 0) return false;
     if (comment.trim() !== store.comments && comment.trim() !== '') return false;
+    if (store.comments !=='' && comment.trim() === '') return false;
     return true;
   }
 
   return (
     <div className={styles.panelCenter}>
-      <PanelToolbar icon={null} header="JSON"></PanelToolbar>
+      <PanelToolbar icon={null} header="Output Review"></PanelToolbar>
       <div className={styles.panelCenterTopSection} >
         <div className={styles.tabContainer}>
           {/* <div className={styles.panelLabel}>

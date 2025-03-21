@@ -22,7 +22,8 @@ const PanelLeft: React.FC<PanelLeftProps> = () => {
 
   const store = useSelector((state: RootState) => ({
     schemaSelectedOption: state.leftPanel.schemaSelectedOption,
-    page_size : state.leftPanel.gridData.page_size
+    page_size : state.leftPanel.gridData.page_size,
+    pageSize: state.leftPanel.pageSize
   }),shallowEqual );
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const PanelLeft: React.FC<PanelLeftProps> = () => {
         dispatch(startLoader("1"));
         await Promise.allSettled([
           dispatch(fetchSchemaData()).unwrap(),
-          dispatch(fetchContentTableData({ pageSize: store.page_size, pageNumber: 1 })).unwrap(),
+          dispatch(fetchContentTableData({ pageSize: store.pageSize, pageNumber: 1 })).unwrap(),
         ]);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -46,7 +47,7 @@ const PanelLeft: React.FC<PanelLeftProps> = () => {
   const refreshGrid = async () => {
     try {
       dispatch(startLoader("1"));
-      await dispatch(fetchContentTableData({ pageSize: store.page_size, pageNumber: 1 })).unwrap()
+      await dispatch(fetchContentTableData({ pageSize: store.pageSize, pageNumber: 1 })).unwrap()
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -56,7 +57,7 @@ const PanelLeft: React.FC<PanelLeftProps> = () => {
 
   return (
     <div className="panelLeft">
-      <PanelToolbar icon={null} header="Content"></PanelToolbar>
+      <PanelToolbar icon={null} header="Processing Queue"></PanelToolbar>
 
       <div style={({ display: "flex", flexWrap: 'wrap', alignItems: "end", gap: "10px", padding: "0px 16px 16px 16px" })}>
         <ComboboxComponent />
