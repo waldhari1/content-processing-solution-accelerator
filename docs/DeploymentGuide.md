@@ -26,8 +26,8 @@ Here are some example regions where the services are available: East US, East US
 Pick from the options below to see step-by-step instructions for: GitHub Codespaces, VS Code Dev Containers, Local Environments, and Bicep deployments.
 
 
-| [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/microsoft/content-processing-solution-accelerator) | [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/content-processing-solution-accelerator) | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmicrosoft%2Fcontent-processing-solution-accelerator%2Fmain%2Finfra%2Fmain.json) |
-|---|---|---|
+| [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/microsoft/content-processing-solution-accelerator) | [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/content-processing-solution-accelerator) |
+|---|---|
 
 <details>
   <summary><b>Deploy in GitHub Codespaces</b></summary>
@@ -48,7 +48,7 @@ You can run this solution using GitHub Codespaces. The button will open a web-ba
 <details>
   <summary><b>Deploy in VS Code</b></summary>
 
- ### VS Code Dev Containers
+### VS Code Dev Containers
 
 You can run this solution in VS Code Dev Containers, which will open the project in your local VS Code using the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers):
 
@@ -66,7 +66,7 @@ You can run this solution in VS Code Dev Containers, which will open the project
 <details>
   <summary><b>Deploy in your local environment</b></summary>
 
-  ### Local environment 
+### Local environment 
 
   If you're not using one of the above options for opening the project, then you'll need to:
 
@@ -89,20 +89,10 @@ You can run this solution in VS Code Dev Containers, which will open the project
 
 </details>
 
-<details>
-  <summary><b>Deploy with Bicep/ARM template</b></summary>
-
-### Bicep
- 
-   Click the following deployment button to create the required resources for this solution directly in your Azure Subscription.
-
-   [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmicrosoft%2Fcontent-processing-solution-accelerator%2Fmain%2Finfra%2Fmain.json)          
-
-</details>
 <br/>
 
+Consider the following settings during your deployment to modify specific settings:
 
-Next, consider the following settings during your deployment:
 <details>
   <summary><b>Configurable Deployment Settings</b></summary>
 
@@ -178,7 +168,7 @@ To change the azd parameters from the default values, follow the steps [here](./
     - **Get API Service's Endpoint**
         - Get API Service Endpoint Url from your container app for API  
           Name is **ca-**<< your environmentName >>-**api**  
-          ![Check API Service Url](images/CheckAPIService.png)
+          ![Check API Service Url](Images/CheckAPIService.png)
           
 
          - Copy the URL
@@ -197,11 +187,11 @@ To change the azd parameters from the default values, follow the steps [here](./
          
 
           ```Powershell
-          ./register_schema.ps1 http://<< API Service Endpoint>>/schemavault/ schema_info_ps1.json
+          ./register_schema.ps1 http://<< API Service Endpoint>>/schemavault/ .\schema_info_ps1.json
           ```  
 
     - **Verify Results**
-        ![schema file registration](images/SchemaFileRegistration.png)
+        ![schema file registration](./Images/SchemaFileRegistration.png)
 
 
    

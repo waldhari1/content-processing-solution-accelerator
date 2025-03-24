@@ -9,7 +9,7 @@ Using AI, the processing pipeline will extract what is preceived as is the "invo
 
 With this concept in mind, schemas need to be created specific to your business and domain requirements. A lot of times schemas may be generally common across industries, but this allows for variations specific to your use case.
 
-A schema should be created that includes all fields you expect to extract and transformed to. Once a schema is added specific to your intended files, you can then programmatically call the API endpoints to submit and process the file for that schema or utilize the web UI to manually process and review.
+A schema should be created that includes all fields you expect to extract and transform to. Once a schema is added specific to your intended files, you can then programmatically call the API endpoints to submit and process the file for that schema or utilize the web UI to manually process and review.
 
 ## Steps to add a Custom Schema
 1. **Create .py class to define schema**<br/>
@@ -33,13 +33,13 @@ A schema should be created that includes all fields you expect to extract and tr
     - Base import statements.
     - Class and subclass definitions that inherit from pydantic BaseModel.
     - Each class has fields, methods, and meta data.
-    - Classes include a class name, a string describing the class, it's attributes, and the attributes descriptions These are used during mapping and data transformation in the processing pipeline.
+    - Classes include a class name, a string describing the class, its attributes, and the attributes descriptions. These are used during mapping and data transformation in the processing pipeline.
     - Classes also include fields and methods.
 
 
     #### Fields
 
-    - Fields are defined in the class to represent what data this class hold. This is a 1-to-1 relationship with what gets extracted from a file being processed is mapped to this specific field. If your file has a field you'd like to extract called "invoice date", you'd have a field defined in your class to represent that.
+    - Fields are defined in the class to represent what data this class holds. This is a 1-to-1 relationship with what gets extracted from a file being processed is mapped to this specific field. If your file has a field you'd like to extract called "invoice date", you'd have a field defined in your class to represent that.
     - Each field has annotations to designate if it is optional or required.
     - Fields also have a string describing what it is and it is used as a prompt to help with data evaluation/validation, mapping and transformation in the processing pipeline. Include an example in the description to help with specificity or experiment with simple logic to help the LLM process the content correctly.
 

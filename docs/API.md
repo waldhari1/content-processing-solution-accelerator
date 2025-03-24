@@ -10,12 +10,12 @@ The Content Processing solution accelerator consists of a number of APIs to hand
     OpenAPI: https://<content-processing-api-container-url>/redoc
 
 ## APIs
-Outlined before are the various APIs that are available as both Swagger and OpenAPI specifications within the solution.
+Outlined below are the various APIs that are available as both Swagger and OpenAPI specifications within the solution.
 
 ### Content Processor
-Responsible processing level actions to capture a file, processess, and queue management.
+Responsible processing level actions to capture a file, processes, and queue management.
 - **[POST]** Processed: Get all processed contents list.
-- **[POST]** Submit: Submit a file to be processed with it's selected schema and any custom meta data to pass along with it for external reference.
+- **[POST]** Submit: Submit a file to be processed with its selected schema and any custom meta data to pass along with it for external reference.
 - **[GET]** Status: Get the status of a file being processed. It shows the status of the file being processed in the pipeline.
 - **[GET]** Processed: Get the processed content results.
 - **[PUT]** Processed: Updates the processed content results; updates the comment in the process.
@@ -32,11 +32,11 @@ System level configuration for adding and managing schemas in the system related
 - **[GET]** Health: Determines the alive state of the solution for processing.
 - **[GET]** Startup: Determines the startup state of the solution.
 
-> Note: You can find a sample REST Client calls with endponts and payload examples in the respository at:<br/><br/>
-/src/ContentProcessorAPI/tetst_http/invoke_APIs.http
+> Note: You can find a sample REST Client call with endpoints and payload examples in the repository at:<br/><br/>
+/src/ContentProcessorAPI/test_http/invoke_APIs.http
 
 ## Note on Custom Meta Data
-Custom meta data can optionally be passed along when submitting a file to be processed on the Content Processor API. This allows for external source system refereence information to be captured and passed through the processing steps. This information stays as reference only for down-stream reference and is not used in in processessing or modifying any data extraction, mapping, or transformation.
+Custom meta data can optionally be passed along when submitting a file to be processed on the Content Processor API. This allows for external source system reference information to be captured and passed through the processing steps. This information stays as reference only for down-stream reference and is not used in processing or modifying any data extraction, mapping, or transformation.
 
 ## Security
 Security is applied to the API by utilizing a vnet for traffic and network control. A service principal with permission can programmatically call the end points and is registered as an application registration in Azure.

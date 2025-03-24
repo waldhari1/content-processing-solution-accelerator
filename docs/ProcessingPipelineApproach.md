@@ -2,17 +2,17 @@
 
 ## Overview
 ![image](./Images/ReadMe/approach.png)
-At the application level, when a file is processed a number of steps take place to ingest, extract, and transform the contents of the file into the selected schema. The diagram above shows a step-by-step overview to the approach for processing.
+At the application level, when a file is processed a number of steps take place to ingest, extract, and transform the contents of the file into the selected schema. The diagram above shows a step-by-step overview of the approach for processing.
 
 1. Documents are passed with a specific schema. This request is sent to the API end point and _can include an optional set of metadata for external refencing_. This collection of data is sent to Azure AI Content Understanding Service for initial extraction of content. This utilizes a pre-built layout for extracting the data.
 
 2. This extracted data is converted to a markdown format.
 
-3. Images are exracted from individual pages and included with the markdown content in a second call to Azure OpenAI Vision to complete a second extration and multiple extraction prompts relating to the schema intially selected.
+3. Images are extracted from individual pages and included with the markdown content in a second call to Azure OpenAI Vision to complete a second extraction and multiple extraction prompts relating to the schema initially selected.
 
-4. These two extracted datasets are compared and use system level logs from by Azure AI Content Understanding and Azure OpenAI to determine the extraction score. This score is used to determine which extraction method is the most accurate for the schema and content and sent to be transformed and structured for finalization.
+4. These two extracted datasets are compared and use system level logs from Azure AI Content Understanding and Azure OpenAI to determine the extraction score. This score is used to determine which extraction method is the most accurate for the schema and content and sent to be transformed and structured for finalization.
 
-5. The top performing data is used for transforming the data into it's selected schema. This is saved as a JSON format along with the final extraction and schema mapping scores. These scores can be used to initiate human-in-the-loop review - allowing for manual review, updates, and annotation of changes.
+5. The top performing data is used for transforming the data into its selected schema. This is saved as a JSON format along with the final extraction and schema mapping scores. These scores can be used to initiate human-in-the-loop review - allowing for manual review, updates, and annotation of changes.
 
 ## Processing Pipeline
 
