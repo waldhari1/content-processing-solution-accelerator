@@ -67,9 +67,9 @@ foreach ($entry in $schemaEntries) {
         $multipartContent.Add($dataContent)
 
         # Log request details for debugging
-        # Write-Output "Uploading schema file: $schemaFile"
-        # Write-Output "ClassName: $className, Description: $description"
-        # Write-Output "API Endpoint: $ApiEndpointUrl"
+        Write-Output "Uploading schema file: $schemaFile"
+        Write-Output "ClassName: $className, Description: $description"
+        Write-Output "API Endpoint: $ApiEndpointUrl"
 
         # Invoke the API with the multipart content
         $httpClient = New-Object System.Net.Http.HttpClient
@@ -81,10 +81,8 @@ foreach ($entry in $schemaEntries) {
 
         # Print the API response
         if ($responseMessage.IsSuccessStatusCode) {
-            $responseJson = $responseContent | ConvertFrom-Json
-            $id = $responseJson.Id
-            $desc = $responseJson.Description
-            Write-Output "$desc's Schema Id - $id"
+            Write-Output "Uploaded '$schemaFile' with ClassName='$className' and Description='$description'."
+            Write-Output "API Response: $responseContent"
         }
         else {
             Write-Error "Failed to upload '$schemaFile'. HTTP Status: $httpStatusCode"
