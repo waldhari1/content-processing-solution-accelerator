@@ -1,16 +1,11 @@
 # # yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
 # metadata:
 #     template: azd-init@1.11.1
-environment:
-  name: content-processing-service
-  location: eastus
+name: content-processing
+
 metadata:
-  name: content-processing-service@1.0
-  
-parameters:
-  solutionPrefix:
-    type: string
-    default: cps-azdtest  
+  template: content-processing@1.0
+  name: content-processinge@1.0
 
 hooks:
   preprovision:
@@ -21,8 +16,3 @@ hooks:
       shell: pwsh
       run: $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"; $logFile = "azd_preprovision_$timestamp.log"; ./infra/scripts/docker-build.ps1 $env:AZURE_SUBSCRIPTION_ID $env:AZURE_ENV_NAME $env:AZURE_LOCATION $env:AZURE_RESOURCE_GROUP $env:USE_LOCAL_BUILD *>&1 | Tee-Object -FilePath $logFile
 
-deployment:
-  mode: Incremental
-  template: ./infra/main.bicep  # Path to the main.bicep file inside the 'infra' folder
-  parameters:
-    solutionPrefix: ${parameters.solutionPrefix}

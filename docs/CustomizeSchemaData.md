@@ -58,9 +58,12 @@ A schema should be created that includes all fields you expect to extract and tr
 
     Below is the sample call with areas you would modify:
 
-    1. The location of the schema class you created.
-    2. The name of the schema class that will get registered, matching the main class in your .py class file.
-    3. Friendly, readable description of the schema.
+    > **Note:** To create and execute requests in `.http` files, you must install the [REST Client VSCode extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) in your Visual Studio Code. Ensure this extension is installed before proceeding to the next step.
+
+    1. The file name for created Schema file(**<< your file >>**.py)
+    2. The file location of the schema class will be registered.
+    3. The name of the main schema class that will get instantiated.
+    4. Friendly, readable description of the schema. this value will be show up in UI.
 
     > ![Schema Registartion REST API call with payload](./images/schema-register-api.png)
 
