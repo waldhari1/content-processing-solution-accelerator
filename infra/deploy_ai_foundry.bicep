@@ -10,8 +10,11 @@ param gptModelVersion string
 param gptDeploymentCapacity int
 // param embeddingModel string
 // param embeddingDeploymentCapacity int
+@secure()
 param managedIdentityObjectId string
+@secure()
 param applicationInsightsId string
+@secure()
 param containerRegistryId string
 
 // Load the abbrevations file required to name the azure resources.
@@ -24,7 +27,6 @@ var aiServicesName_cu = '${abbrs.ai.aiServices}${solutionName}-cu'
 var location_cu = cuLocation
 // var aiServicesName_m = '${solutionName}-aiservices_m'
 // var location_m = solutionLocation
-var keyvaultName = '${abbrs.security.keyVault}${solutionName}'
 var location = solutionLocation //'eastus2'
 var aiHubName = '${abbrs.ai.aiHub}${solutionName}'
 var aiHubFriendlyName = aiHubName
