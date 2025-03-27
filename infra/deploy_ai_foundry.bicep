@@ -74,6 +74,7 @@ resource aiServices 'Microsoft.CognitiveServices/accounts@2021-10-01' = {
       statisticsEnabled: false
     }
     publicNetworkAccess: 'Enabled'
+    disableLocalAuth: true
   }
 }
 
@@ -93,6 +94,7 @@ resource aiServices_CU 'Microsoft.CognitiveServices/accounts@2021-10-01' = {
       statisticsEnabled: false
     }
     publicNetworkAccess: 'Enabled'
+    disableLocalAuth: true
   }
 }
 
@@ -462,9 +464,6 @@ resource azureLocatioEntry 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview
     value: solutionLocation
   }
 }
-
-output keyvaultName string = keyvaultName
-output keyvaultId string = keyVault.id
 
 output aiServicesTarget string = aiServices.properties.endpoint //aiServices_m.properties.endpoint
 output aiServicesCUEndpoint string = aiServices_CU.properties.endpoint //aiServices_m.properties.endpoint
