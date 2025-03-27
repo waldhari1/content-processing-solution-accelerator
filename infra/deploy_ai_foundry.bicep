@@ -1,6 +1,7 @@
 // Creates Azure dependent resources for Azure AI studio
 param solutionName string
 param solutionLocation string
+@secure()
 param keyVaultName string
 param cuLocation string
 param deploymentType string
