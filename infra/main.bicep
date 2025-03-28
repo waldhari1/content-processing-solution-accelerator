@@ -78,6 +78,9 @@ var resourceGroupLocation = resourceGroup().location
 // Load the abbrevations file required to name the azure resources.
 var abbrs = loadJsonContent('./abbreviations.json')
 
+// Convert input to lowercase
+var useLocalBuildLower = toLower(useLocalBuild)
+
 // ========== Managed Identity ========== //
 module managedIdentityModule 'deploy_managed_identity.bicep' = {
   name: 'deploy_managed_identity'
@@ -229,7 +232,7 @@ module updateContainerApp './container_app/deploy_container_app_api_web.bicep' =
   params: {
     solutionName: solutionPrefix
     location: secondaryLocation
-    azureContainerRegistry: useLocalBuild == 'true' ? containerRegistry.outputs.acrEndpoint : containerImageEndPoint
+    azureContainerRegistry: useLocalBuildLower == 'true' ? containerRegistry.outputs.acrEndpoint : containerImageEndPoint
     appConfigEndPoint: appconfig.outputs.appConfigEndpoint
     containerAppEnvId: containerAppEnv.outputs.containerEnvId
     containerRegistryReaderId: containerAppEnv.outputs.containerRegistryReaderId
@@ -241,7 +244,7 @@ module updateContainerApp './container_app/deploy_container_app_api_web.bicep' =
     maxReplicaContainerApi: maxReplicaContainerApi
     minReplicaContainerWeb: minReplicaContainerWeb
     maxReplicaContainerWeb: maxReplicaContainerWeb
-    useLocalBuild: useLocalBuild
+    useLocalBuild: useLocalBuildLower
   }
   dependsOn: [roleAssignments]
 }
