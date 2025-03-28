@@ -1,7 +1,6 @@
 // Creates Azure dependent resources for Azure AI studio
 param solutionName string
 param solutionLocation string
-@secure()
 param keyVaultName string
 param cuLocation string
 param deploymentType string
@@ -10,11 +9,8 @@ param gptModelVersion string
 param gptDeploymentCapacity int
 // param embeddingModel string
 // param embeddingDeploymentCapacity int
-@secure()
 param managedIdentityObjectId string
-@secure()
 param applicationInsightsId string
-@secure()
 param containerRegistryId string
 
 // Load the abbrevations file required to name the azure resources.
