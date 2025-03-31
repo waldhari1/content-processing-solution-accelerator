@@ -221,33 +221,25 @@ This will rebuild the source code, package it into a container, and push it to t
         Bash  
 
         ```bash  
-
         ./upload_files.sh https://<< API Service Endpoint >>/contentprocessor/submit ./invoices <<Invoice Schema Id>>
-        
         ```
 
         ```bash
-        
         ./upload_files.sh https://<< API Service Endpoint >>/contentprocessor/submit ./propertyclaims <<Property Loss Damage Claim Form Schema Id>>
-        
         ```
 
         Windows
 
         ```powershell
-        
         ./upload_files.ps1 https://<< API Service Endpoint >>/contentprocessor/submit .\invoices <<Invoice Schema Id>>
-        
         ```
 
         ```powershell
-        
         ./upload_files.ps1 https://<< API Service Endpoint >>/contentprocessor/submit .\propertyclaims <<Property Loss Damage Claim Form Schema Id>>
-        
         ```
 
 3. **Add Authentication Provider**  
-    - Follow steps in [App Authentication](./ConfigureAppAuthentication_withImage.md) to configure authenitcation in app service. Note that Authentication changes can take up to 10 minutes.  
+    - Follow steps in [App Authentication](./ConfigureAppAuthentication.md) to configure authenitcation in app service. Note that Authentication changes can take up to 10 minutes.  
 
 4. **Deleting Resources After a Failed Deployment**  
 

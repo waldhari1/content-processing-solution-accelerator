@@ -23,7 +23,6 @@ var aiServicesName_cu = '${abbrs.ai.aiServices}${solutionName}-cu'
 var location_cu = cuLocation
 // var aiServicesName_m = '${solutionName}-aiservices_m'
 // var location_m = solutionLocation
-var keyvaultName = '${abbrs.security.keyVault}${solutionName}'
 var location = solutionLocation //'eastus2'
 var aiHubName = '${abbrs.ai.aiHub}${solutionName}'
 var aiHubFriendlyName = aiHubName
@@ -74,6 +73,7 @@ resource aiServices 'Microsoft.CognitiveServices/accounts@2021-10-01' = {
       statisticsEnabled: false
     }
     publicNetworkAccess: 'Enabled'
+    disableLocalAuth: true
   }
 }
 
@@ -93,6 +93,7 @@ resource aiServices_CU 'Microsoft.CognitiveServices/accounts@2021-10-01' = {
       statisticsEnabled: false
     }
     publicNetworkAccess: 'Enabled'
+    disableLocalAuth: true
   }
 }
 
@@ -462,9 +463,6 @@ resource azureLocatioEntry 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview
     value: solutionLocation
   }
 }
-
-output keyvaultName string = keyvaultName
-output keyvaultId string = keyVault.id
 
 output aiServicesTarget string = aiServices.properties.endpoint //aiServices_m.properties.endpoint
 output aiServicesCUEndpoint string = aiServices_CU.properties.endpoint //aiServices_m.properties.endpoint

@@ -6,7 +6,7 @@
     },
     {
         "File": "./propertyclaim.py",
-        "ClassName": "PropertyClaim",
+        "ClassName": "PropertyLossDamageClaimForm",
         "Description": "Property Loss Damage Claim Form"
     }
 ]
