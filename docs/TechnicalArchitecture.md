@@ -20,7 +20,6 @@ Using Azure Container App, this includes API end points exposed to facilitate in
 ### Content Process Monitor Web
 Using Azure Container App, this app acts as the UI for the process monitoring queue. The app is built with React and TypeScript. It acts as an API client to create an experience for uploading new documents, monitoring current and historical processes, and reviewing output results.
 
-
 ### App Configuration
 Using Azure App Configuration, app settings and configurations are centralized and used with the Content Processor, Content process API, and Content Process Monitor Web.
 
@@ -30,11 +29,11 @@ Using Azure Storage Queue, pipeline work steps and processing jobs are added to 
 ### Azure AI Content Understanding Service
 Used to detect and extract text from images and PDFs. This service also retrieves the coordinates of each piece of text, along with confidence scores, by leveraging built-in (pretrained) models. This utilizes the prebuild-layout 2024-12-01-preview for extraction.
 
-### Azure OpenAI
-Using Azure OpenAI, a deployment of the GPT-4o 2024-10-01-preview model is used during the content processing pipeline to extract content. GPT Vision is used for extraction and validation functions during processing. This model can be changed to a different Azure OpenAI model if desired, but this has not been thoroughly tested and may be affected by the output token limits.
+### Azure OpenAI Service
+Using Azure OpenAI Service, a deployment of the GPT-4o 2024-10-01-preview model is used during the content processing pipeline to extract content. GPT Vision is used for extraction and validation functions during processing. This model can be changed to a different Azure OpenAI Service model if desired, but this has not been thoroughly tested and may be affected by the output token limits.
 
 ### Blob Storage
 Using Azure Blob Storage, schema .py files, source files for processing, and final output JSON files are stored in blob storage.
 
-### Cosmos DB for MongoDB
+### Azure Cosmos DB for MongoDB
 Using Azure Cosmos DB for MongoDB, files that have been submitted for processing are added to the DB and their processing step history is saved. The processing queue stores individual processes information and history for status and processing step review, along with final extraction and transformation into JSON for its selected schema.

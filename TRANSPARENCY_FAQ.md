@@ -2,15 +2,15 @@
 
 - ### What is the Content Processing Solution Accelerator? 
 
-  This solution accelerator is an open-source GitHub Repository to extract data from unstructured documents and transform the data into defined schemas with validation to enhance the speed of downstream data ingestion and improve quality. It enables the ability to efficiently automate extraction, validation, and structuring of information for event driven system-to-system workflows. The solution is built using Azure OpenAI, Azure AI Services, Content Understanding Services, CosmosDB, and Azure Containers.  
+  This solution accelerator is an open-source GitHub Repository to extract data from unstructured documents and transform the data into defined schemas with validation to enhance the speed of downstream data ingestion and improve quality. It enables the ability to efficiently automate extraction, validation, and structuring of information for event driven system-to-system workflows. The solution is built using Azure OpenAI Service, Azure AI Services, Azure AI Content Understanding Service, Azure Cosmos DB, and Azure Container Apps.  
 
  
 
 - ### What can the Content Processing Solution Accelerator do?  
 
-    The sample solution is tailored for a Data Analyst at a property insurance company, who analyzes large amounts of claim-related data including forms, reports, invoices, and property loss documentation. The sample data is synthetically generated utilizing Azure OpenAI and saved into related templates and files, which are unstructured documents that can be used to show the processing pipeline. Any names and other personally identifiable information in the sample data is fictitious.  
+    The sample solution is tailored for a Data Analyst at a property insurance company, who analyzes large amounts of claim-related data including forms, reports, invoices, and property loss documentation. The sample data is synthetically generated utilizing Azure OpenAI Service and saved into related templates and files, which are unstructured documents that can be used to show the processing pipeline. Any names and other personally identifiable information in the sample data is fictitious.  
 
-    The sample solution processes the uploaded documents by exposing an API endpoint that utilizes Azure OpenAI and Content Understanding Service for extraction. The extracted data is then transformed into a specific schema output based on the content type (ex: invoice), and validates the extraction and schema mapping through accuracy scoring. The scoring enables thresholds to dictate a human-in-the-loop review of the output if needed, allowing a user to review, update, and add comments.  
+    The sample solution processes the uploaded documents by exposing an API endpoint that utilizes Azure OpenAI Service and Azure AI Content Understanding Service for extraction. The extracted data is then transformed into a specific schema output based on the content type (ex: invoice), and validates the extraction and schema mapping through accuracy scoring. The scoring enables thresholds to dictate a human-in-the-loop review of the output if needed, allowing a user to review, update, and add comments.  
 
 - ### What is/are the Content Processing Solution Accelerator’s intended use(s)? 
 

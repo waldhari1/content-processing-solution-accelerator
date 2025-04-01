@@ -8,8 +8,7 @@ Check the [Azure Products by Region](https://azure.microsoft.com/en-us/explore/g
 
 - [Azure AI Foundry](https://learn.microsoft.com/en-us/azure/ai-foundry/)
 - [Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-services/openai/)
-- [Azure AI Document Intelligence](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/)
-- [Azure AI Content Understanding](https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/)
+- [Azure AI Content Understanding Service](https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/)
 - [Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/)
 - [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/)
 - [Azure Container Registry](https://learn.microsoft.com/en-us/azure/container-registry/)
