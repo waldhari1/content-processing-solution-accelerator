@@ -11,7 +11,7 @@ Set the Environment Name Prefix
 azd env set AZURE_ENV_NAME 'cps'
 ```
 
-Change the Content Understanding Service Location (example: eastus2, westus2, etc.)
+Change the Azure Content Understanding Service Location (example: eastus2, westus2, etc.)
 ```shell
 azd env set AZURE_ENV_CU_LOCATION 'West US'
 ```

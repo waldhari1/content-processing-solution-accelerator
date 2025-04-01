@@ -9,11 +9,11 @@ param environmentName string
 var uniqueId = toLower(uniqueString(subscription().id, environmentName, resourceGroup().location))
 var solutionPrefix = 'cps-${padLeft(take(uniqueId, 12), 12, '0')}'
 
-@description('Location used for Cosmos DB, Container App deployment')
+@description('Location used for Azure Cosmos DB, Azure Container App deployment')
 param secondaryLocation string = 'EastUs2'
 
 @minLength(1)
-@description('Location for the Content Understanding service deployment:')
+@description('Location for the Azure AI Content Understanding service deployment:')
 @allowed(['WestUS', 'SwedenCentral', 'AustraliaEast'])
 @metadata({
   azd: {
