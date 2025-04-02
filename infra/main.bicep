@@ -229,7 +229,7 @@ module updateContainerApp './container_app/deploy_container_app_api_web.bicep' =
   params: {
     solutionName: solutionPrefix
     location: secondaryLocation
-    azureContainerRegistry: useLocalBuild == 'true' ? containerRegistry.outputs.acrEndpoint : containerImageEndPoint
+    azureContainerRegistry: toLower(useLocalBuild) == 'true' ? containerRegistry.outputs.acrEndpoint : containerImageEndPoint
     appConfigEndPoint: appconfig.outputs.appConfigEndpoint
     containerAppEnvId: containerAppEnv.outputs.containerEnvId
     containerRegistryReaderId: containerAppEnv.outputs.containerRegistryReaderId
@@ -241,7 +241,7 @@ module updateContainerApp './container_app/deploy_container_app_api_web.bicep' =
     maxReplicaContainerApi: maxReplicaContainerApi
     minReplicaContainerWeb: minReplicaContainerWeb
     maxReplicaContainerWeb: maxReplicaContainerWeb
-    useLocalBuild: useLocalBuild
+    useLocalBuild: toLower(useLocalBuild)
   }
   dependsOn: [roleAssignments]
 }

@@ -29,9 +29,9 @@ class AppConfiguration(ModelBaseSettings):
     app_cps_processes: str
     app_message_queue_extract: str
     app_cps_max_filesize_mb: int
+    app_logging_enable: bool
+    app_logging_level: str
 
-
-logging.basicConfig(level=logging.DEBUG)
 # Read .env file
 # Get Current Path + .env file
 env_file_path = os.path.join(os.path.dirname(__file__), ".env")
@@ -44,6 +44,14 @@ app_helper.read_and_set_environmental_variables()
 
 app_config = AppConfiguration()
 
+if app_config.app_logging_enable:
+# Read Configuration for Logging Level as a Text then retrive the logging level
+    logging_level = getattr(
+        logging, app_config.app_logging_level
+    )
+    logging.basicConfig(level=logging_level)
+else:
+    logging.disable(logging.CRITICAL)
 
 # Dependency Function
 def get_app_config() -> AppConfiguration:

@@ -78,7 +78,7 @@ You can run this solution in VS Code Dev Containers, which will open the project
 If you're not using one of the above options for opening the project, then you'll need to:
 
 1. Make sure the following tools are installed:
-
+    - [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.5) <small>(v7.0+)</small> - available for Windows, macOS, and Linux.
     - [Azure Developer CLI (azd)](https://aka.ms/install-azd)
     - [Python 3.9+](https://www.python.org/downloads/)
     - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
@@ -173,8 +173,12 @@ If you need to rebuild the source code and push the updated container to the dep
      ```powershell
      $env:USE_LOCAL_BUILD = $true
      ```
+2. Run the `az login` command
+   ```bash
+   az login
+   ```
 
-2. Run the `azd up` command again to rebuild and push the updated container:
+3. Run the `azd up` command again to rebuild and push the updated container:
    ```bash
    azd up
    ```
