@@ -26,7 +26,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import httpUtility from "../../Services/httpUtility.ts";
 import { JsonEditor } from "json-edit-react";
 import { CheckmarkCircleFilled } from "@fluentui/react-icons";
-import { fetchContentJsonData } from '../../store/slices/centerPanelSlice';
+import { fetchContentJsonData , setActiveProcessId } from '../../store/slices/centerPanelSlice';
 
 
 interface ContentProps {
@@ -113,7 +113,7 @@ const ContentDevelopers: React.FC<ContentProps> = ({
   const styles = useStyles();
   const dispatch = useDispatch<AppDispatch>();
   const [comment, setComment] = React.useState("");
-  const [selectedProcessId, setSelectedProcessId] = React.useState<string | null>(null);
+  //const [selectedProcessId, setSelectedProcessId] = React.useState<string | null>(null);
   const [selectedTab, setSelectedTab] = React.useState<TabValue>("extracted-results");
   const [ApiLoader ,setApiLoader] = useState(false);
   const status = ['extract','processing','map','evaluate'];
@@ -125,12 +125,14 @@ const ContentDevelopers: React.FC<ContentProps> = ({
     modified_result: state.centerPanel.modified_result,
     isSavingInProgress: state.centerPanel.isSavingInProgress,
     processStepsData: state.centerPanel.processStepsData,
-    selectedItem : state.leftPanel.selectedItem
+    selectedItem : state.leftPanel.selectedItem,
+    activeProcessId : state.centerPanel.activeProcessId
   }), shallowEqual
   );
 
   useEffect(() => {
-    setSelectedProcessId(store.processId)
+    //setSelectedProcessId(store.processId);
+    dispatch(setActiveProcessId(store.processId))
     setComment('');
   }, [store.processId])
 
@@ -144,8 +146,8 @@ const ContentDevelopers: React.FC<ContentProps> = ({
       try {
         setApiLoader(true);
         await Promise.allSettled([
-        dispatch(fetchContentJsonData({ processId: selectedProcessId })),
-        dispatch(fetchProcessSteps({ processId: selectedProcessId }))
+        dispatch(fetchContentJsonData({ processId: store.activeProcessId })),
+        dispatch(fetchProcessSteps({ processId: store.activeProcessId }))
       ]);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -153,10 +155,10 @@ const ContentDevelopers: React.FC<ContentProps> = ({
         setApiLoader(false);
       }
     } 
-    if ((selectedProcessId != null || selectedProcessId != '') && !status.includes(store.selectedItem.status) && store.selectedItem?.process_id === selectedProcessId ) {
+    if ((store.activeProcessId != null || store.activeProcessId != '') && !status.includes(store.selectedItem.status) && store.selectedItem?.process_id === store.activeProcessId ) {
       fetchContent();
     }
-  }, [selectedProcessId, store.selectedItem])
+  }, [store.activeProcessId, store.selectedItem])
 
   const renderProcessTimeInSeconds = (timeString: string) => {
     if (!timeString) {
@@ -176,13 +178,13 @@ const ContentDevelopers: React.FC<ContentProps> = ({
 
   const ExtractedResults = React.useCallback(() => (
     <div role="tabpanel" className={styles.tabItemCotnent} aria-labelledby="Extracted Results">
-      {selectedProcessId && !status.includes(store.selectedItem.status) ? (
+      {store.activeProcessId && !status.includes(store.selectedItem.status) ? (
         <JSONEditor
-          processId={selectedProcessId}
+          processId={store.activeProcessId}
         />
       ) : <p style={{textAlign:'center'}}>No data available</p>}
     </div>
-  ), [selectedProcessId,store.selectedItem]);
+  ), [store.activeProcessId,store.selectedItem]);
 
   const ProcessHistory = useCallback(() => (
     <div role="tabpanel" className={styles.processTabItemCotnent} aria-labelledby="Process Steps">
@@ -220,7 +222,7 @@ const ContentDevelopers: React.FC<ContentProps> = ({
       {ApiLoader ? <div className={styles.apiLoader}><p>Loading...</p></div> 
         : (store.processStepsData?.length == 0 || status.includes(store.selectedItem.status)) && <p style={{textAlign:'center'}}> No data available</p>}  
     </div>
-  ), [store.processStepsData, selectedProcessId, styles.tabItemCotnent, ApiLoader]);
+  ), [store.processStepsData, store.activeProcessId, styles.tabItemCotnent, ApiLoader]);
 
   const onTabSelect = (event: SelectTabEvent, data: SelectTabData) => {
     setSelectedTab(data.value);
@@ -230,7 +232,7 @@ const ContentDevelopers: React.FC<ContentProps> = ({
     try {
       dispatch(startLoader("1"));
       dispatch(setUpdateComments(comment))
-      await dispatch(saveContentJson({ 'processId': selectedProcessId, 'contentJson': store.modified_result.extracted_result, 'comments': comment , 'savedComments': store.comments }))
+      await dispatch(saveContentJson({ 'processId': store.activeProcessId, 'contentJson': store.modified_result.extracted_result, 'comments': comment , 'savedComments': store.comments }))
     } catch (error) {
       console.error('API Error:', error);
     } finally {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Document } from "./DocumentViewer.types";
 import { TIFFViewer } from 'react-tiff';
@@ -6,7 +6,17 @@ import './DocumentViewer.styles.scss';
 
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
+import {
+    Dialog,
+    DialogTrigger,
+    DialogSurface,
+    DialogTitle,
+    DialogBody,
+    DialogContent,
+    Button,
+} from "@fluentui/react-components";
 
+import ReactDOM from 'react-dom';
 
 interface IIFrameComponentProps {
     className?: string;
@@ -17,10 +27,18 @@ interface IIFrameComponentProps {
 
 const DocumentViewer = ({ className, metadata, urlWithSasToken, iframeKey }: IIFrameComponentProps) => {
     const { t } = useTranslation();
+    const [imgError, setImageError] = useState(false);
+
+    useEffect(() => {
+        setImageError(false)
+    }, [urlWithSasToken])
+
+    // Ref for the container div where the Dialog will be rendered
+    const containerRef = React.useRef<HTMLDivElement | null>(null);
 
     const getContentComponent = () => {
         if (!metadata || !urlWithSasToken) {
-            return <div style={{textAlign:'center'}}>{t("components.document.none", "No document available")}</div>;
+            return <div style={{ textAlign: 'center' }}>{t("components.document.none", "No document available")}</div>;
         }
 
         switch (metadata.mimeType) {
@@ -50,7 +68,7 @@ const DocumentViewer = ({ className, metadata, urlWithSasToken, iframeKey }: IIF
             case "image/svg+xml": {
                 return <div className="imageContainer">
                     <Zoom>
-                        <img src={urlWithSasToken} alt={"Document"} width="100%" height="100%" className="document-image" />
+                        <img src={urlWithSasToken} alt={"Document"} onError={() => setImageError(true)} width="100%" height="100%" className="document-image" />
                     </Zoom>
                 </div>;
             }
@@ -94,7 +112,30 @@ const DocumentViewer = ({ className, metadata, urlWithSasToken, iframeKey }: IIF
         }
     };
 
-    return <div className={`${className}`}>{getContentComponent()}</div>;
+    const dialogContent = (
+        <Dialog modalType="non-modal" open={true} onOpenChange={(e, { open }) => setImageError(false)}>
+            <DialogSurface>
+                <DialogBody>
+                    <DialogTitle>Invalid Image</DialogTitle>
+                    <DialogContent>
+                        Invalid Image File!
+                    </DialogContent>
+                </DialogBody>
+            </DialogSurface>
+        </Dialog>
+    );
+
+    return <> <div className={`${className} ${imgError ? 'imageErrorContainer' : ''}`}>
+        {imgError ?
+            <div className={"invalidImagePopup"}>
+                <span className="imgEH">We can't open this file</span>
+                <p className="imgCtn">Something went wrong.</p>
+                 </div>
+            : getContentComponent()
+        }
+    </div>
+
+    </>;
 }
 
 export default DocumentViewer;

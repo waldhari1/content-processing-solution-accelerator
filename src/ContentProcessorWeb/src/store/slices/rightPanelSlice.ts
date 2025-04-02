@@ -3,12 +3,18 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import httpUtility from '../../Services/httpUtility';
 
 import { toast } from "react-toastify";
+interface T {
+    headers:any,
+    blobURL:string,
+    processId : string
+}
 
 interface RightPanelState {
     fileHeaders: any;
     rLoader: boolean;
     blobURL: string;
     rError: string | null;
+    fileResponse : Array<T>
 }
 
 export const fetchContentFileData = createAsyncThunk<any, { processId: string | null }>('/contentprocessor/processed/files/', async ({ processId }, { rejectWithValue }): Promise<any> => {
@@ -24,7 +30,7 @@ export const fetchContentFileData = createAsyncThunk<any, { processId: string | 
             throw new Error("Failed to fetch headers");
         }
         const headersObject = Object.fromEntries(headers.entries());
-        return { headers: headersObject, blobURL: blobURL };
+        return { headers: headersObject, blobURL: blobURL, processId: processId  };
     }
     catch (error) {
         return rejectWithValue({
@@ -40,7 +46,8 @@ const initialState: RightPanelState = {
     fileHeaders: {},
     blobURL: '',
     rLoader: false,
-    rError: ''
+    rError: '',
+    fileResponse :[]
 };
 
 const rightPanelSlice = createSlice({
@@ -62,6 +69,9 @@ const rightPanelSlice = createSlice({
                 state.fileHeaders = action.payload.headers;
                 state.blobURL = action.payload.blobURL;
                 state.rLoader = false;
+                const isItemExists  = state.fileResponse.find(i=>i.processId === action.payload.processId)
+                if(!isItemExists )
+                    state.fileResponse.push(action.payload)
             })
             .addCase(fetchContentFileData.rejected, (state, action) => {
                 //console.log('Error : ', action.error.message)
