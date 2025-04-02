@@ -121,7 +121,7 @@ When you start the deployment, most parameters will have **default values**, but
 By default, the **GPT model capacity** in deployment is set to **30k tokens**.  
 > **We recommend increasing the capacity to 100k tokens for optimal performance.**
 
-To adjust quota settings, follow these [steps](./docs/AzureGPTQuotaSettings.md).
+To adjust quota settings, follow these [steps](./AzureGPTQuotaSettings.md).
 
 **⚠️ Warning:** Insufficient quota can cause deployment errors. Please ensure you have the recommended capacity or request additional capacity before deploying this solution.
 
