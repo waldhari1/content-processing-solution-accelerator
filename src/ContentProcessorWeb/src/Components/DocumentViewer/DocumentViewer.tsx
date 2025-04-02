@@ -6,17 +6,7 @@ import './DocumentViewer.styles.scss';
 
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
-import {
-    Dialog,
-    DialogTrigger,
-    DialogSurface,
-    DialogTitle,
-    DialogBody,
-    DialogContent,
-    Button,
-} from "@fluentui/react-components";
 
-import ReactDOM from 'react-dom';
 
 interface IIFrameComponentProps {
     className?: string;
@@ -111,19 +101,6 @@ const DocumentViewer = ({ className, metadata, urlWithSasToken, iframeKey }: IIF
                 return "Doc visualizer";
         }
     };
-
-    const dialogContent = (
-        <Dialog modalType="non-modal" open={true} onOpenChange={(e, { open }) => setImageError(false)}>
-            <DialogSurface>
-                <DialogBody>
-                    <DialogTitle>Invalid Image</DialogTitle>
-                    <DialogContent>
-                        Invalid Image File!
-                    </DialogContent>
-                </DialogBody>
-            </DialogSurface>
-        </Dialog>
-    );
 
     return <> <div className={`${className} ${imgError ? 'imageErrorContainer' : ''}`}>
         {imgError ?
