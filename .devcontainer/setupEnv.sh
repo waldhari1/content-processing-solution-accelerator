@@ -1,9 +1,10 @@
 #!/bin/sh
 
-set -e  # Exit on error
 echo "Pull latest code for the current branch"
 git fetch
 git pull
+
+set -e  # Exit on error
 
 echo "Setting up ContentProcessor..."
 cd ./src/ContentProcessor
@@ -22,8 +23,8 @@ yarn install
 cd ../../
 
 echo "Setting up executable permission for shell scripts"
-chmod +x ./infra/scripts/docker-build.sh
-chmod +x ./src/ContentProcessorAPI/samples/upload_files.sh
-chmod +x ./src/ContentProcessorAPI/samples/schemas/register_schema.sh
+sudo chmod +x ./infra/scripts/docker-build.sh
+sudo chmod +x ./src/ContentProcessorAPI/samples/upload_files.sh
+sudo chmod +x ./src/ContentProcessorAPI/samples/schemas/register_schema.sh
 
 echo "Setup complete! 🎉"
