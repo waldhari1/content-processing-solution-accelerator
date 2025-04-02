@@ -10,7 +10,7 @@ interface CenterPanelState {
     modified_result: any;
     comments: string;
     isSavingInProgress: boolean;
-
+    activeProcessId : string,
     processStepsData: any[];
 }
 
@@ -78,7 +78,7 @@ const initialState: CenterPanelState = {
     modified_result: {},
     comments: '',
     isSavingInProgress: false,
-
+    activeProcessId : '',
     processStepsData: [],
 };
 
@@ -91,7 +91,10 @@ const centerPanelSlice = createSlice({
         },
         setUpdateComments :  (state, action) => {
            state.comments = action.payload
-        }
+        },
+       setActiveProcessId :(state,action) =>{
+          state.activeProcessId = action.payload
+       }
     },
     extraReducers: (builder) => {
         //Fetch Dropdown values
@@ -103,9 +106,11 @@ const centerPanelSlice = createSlice({
                 state.comments = '';
             })
             .addCase(fetchContentJsonData.fulfilled, (state, action) => { // Adjust `any` to the response data type
-                state.contentData = action.payload;
-                state.comments = action.payload.comment?? "" ;
-                state.cLoader = false;
+                if(state.activeProcessId == action.payload.process_id){
+                    state.contentData = action.payload;
+                    state.comments = action.payload.comment?? "" ;
+                    state.cLoader = false;
+                }
             })
             .addCase(fetchContentJsonData.rejected, (state, action) => {
                 state.cError = action.error.message || 'An error occurred';
@@ -146,5 +151,5 @@ const centerPanelSlice = createSlice({
     },
 });
 
-export const { setModifiedResult ,setUpdateComments} = centerPanelSlice.actions;
+export const { setModifiedResult ,setUpdateComments, setActiveProcessId} = centerPanelSlice.actions;
 export default centerPanelSlice.reducer;
