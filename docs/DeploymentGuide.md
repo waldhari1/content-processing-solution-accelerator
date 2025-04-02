@@ -8,8 +8,7 @@ Check the [Azure Products by Region](https://azure.microsoft.com/en-us/explore/g
 
 - [Azure AI Foundry](https://learn.microsoft.com/en-us/azure/ai-foundry/)
 - [Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-services/openai/)
-- [Azure AI Document Intelligence](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/)
-- [Azure AI Content Understanding](https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/)
+- [Azure AI Content Understanding Service](https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/)
 - [Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/)
 - [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/)
 - [Azure Container Registry](https://learn.microsoft.com/en-us/azure/container-registry/)
@@ -225,29 +224,21 @@ This will rebuild the source code, package it into a container, and push it to t
         Bash  
 
         ```bash  
-
         ./upload_files.sh https://<< API Service Endpoint >>/contentprocessor/submit ./invoices <<Invoice Schema Id>>
-        
         ```
 
         ```bash
-        
         ./upload_files.sh https://<< API Service Endpoint >>/contentprocessor/submit ./propertyclaims <<Property Loss Damage Claim Form Schema Id>>
-        
         ```
 
         Windows
 
         ```powershell
-        
         ./upload_files.ps1 https://<< API Service Endpoint >>/contentprocessor/submit .\invoices <<Invoice Schema Id>>
-        
         ```
 
         ```powershell
-        
         ./upload_files.ps1 https://<< API Service Endpoint >>/contentprocessor/submit .\propertyclaims <<Property Loss Damage Claim Form Schema Id>>
-        
         ```
 
 3. **Add Authentication Provider**  

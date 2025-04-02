@@ -6,8 +6,8 @@ param appConfigResourceId string // Resource ID of the App Configuration instanc
 param storageResourceId string // Resource ID of the Storage account
 param storagePrincipalId string // Resource ID of the Storage account
 
-param aiServiceCUId string // Resource ID of the Content Understanding Service
-param aiServiceId string // Resource ID of the Open AI service
+param aiServiceCUId string // Resource ID of the Azure AI Content Understanding Service
+param aiServiceId string // Resource ID of the Azure Open AI service
 
 param containerRegistryReaderPrincipalId string
 

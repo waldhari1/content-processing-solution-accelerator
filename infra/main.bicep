@@ -9,11 +9,11 @@ param environmentName string
 var uniqueId = toLower(uniqueString(subscription().id, environmentName, resourceGroup().location))
 var solutionPrefix = 'cps-${padLeft(take(uniqueId, 12), 12, '0')}'
 
-@description('Location used for Cosmos DB, Container App deployment')
+@description('Location used for Azure Cosmos DB, Azure Container App deployment')
 param secondaryLocation string = 'EastUs2'
 
 @minLength(1)
-@description('Location for the Content Understanding service deployment:')
+@description('Location for the Azure AI Content Understanding service deployment:')
 @allowed(['WestUS', 'SwedenCentral', 'AustraliaEast'])
 @metadata({
   azd: {
@@ -77,6 +77,9 @@ var resourceGroupLocation = resourceGroup().location
 
 // Load the abbrevations file required to name the azure resources.
 var abbrs = loadJsonContent('./abbreviations.json')
+
+// Convert input to lowercase
+var useLocalBuildLower = toLower(useLocalBuild)
 
 // ========== Managed Identity ========== //
 module managedIdentityModule 'deploy_managed_identity.bicep' = {
@@ -229,7 +232,7 @@ module updateContainerApp './container_app/deploy_container_app_api_web.bicep' =
   params: {
     solutionName: solutionPrefix
     location: secondaryLocation
-    azureContainerRegistry: toLower(useLocalBuild) == 'true' ? containerRegistry.outputs.acrEndpoint : containerImageEndPoint
+    azureContainerRegistry: useLocalBuildLower == 'true' ? containerRegistry.outputs.acrEndpoint : containerImageEndPoint
     appConfigEndPoint: appconfig.outputs.appConfigEndpoint
     containerAppEnvId: containerAppEnv.outputs.containerEnvId
     containerRegistryReaderId: containerAppEnv.outputs.containerRegistryReaderId
@@ -241,7 +244,7 @@ module updateContainerApp './container_app/deploy_container_app_api_web.bicep' =
     maxReplicaContainerApi: maxReplicaContainerApi
     minReplicaContainerWeb: minReplicaContainerWeb
     maxReplicaContainerWeb: maxReplicaContainerWeb
-    useLocalBuild: toLower(useLocalBuild)
+    useLocalBuild: useLocalBuildLower
   }
   dependsOn: [roleAssignments]
 }
