@@ -56,46 +56,32 @@ jobs:
           echo "DATE_TAG=${DATE_TAG}" >> $GITHUB_ENV
           echo "Base tag: $BASE_TAG, Date tag: $DATE_TAG"
 
-      - name: Build and push ContentProcessor Docker image
-        run: |
-          cd src/ContentProcessor
-          IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessor"
-          echo "Using image name: ${IMAGE_NAME}"
-          # Build image with two tags: one base and one with date
-          docker build -t ${IMAGE_NAME}:${BASE_TAG} -t ${IMAGE_NAME}:${DATE_TAG} -f Dockerfile .
-          # Push both tags if the base tag is valid
-          if [[ "${BASE_TAG}" == "latest" || "${BASE_TAG}" == "dev" || "${BASE_TAG}" == "demo" || "${BASE_TAG}" == "hotfix" ]]; then
-            docker push ${IMAGE_NAME}:${BASE_TAG}
-            docker push ${IMAGE_NAME}:${DATE_TAG}
-            echo "ContentProcessor image built and pushed successfully."
-          else
-            echo "Skipping Docker push for ContentProcessor with tag: ${BASE_TAG}"
-          fi
+      - name: Build and Push ContentProcessor Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src/ContentProcessor
+          file: ./src/ContentProcessor/Dockerfile
+          push: ${{ github.ref_name == 'main' || github.ref_name == 'dev' || github.ref_name == 'demo' || github.ref_name == 'hotfix' }}
+          tags: |
+            ${{ env.ACR_LOGIN_SERVER }}/contentprocessor:${{ env.BASE_TAG }}
+            ${{ env.ACR_LOGIN_SERVER }}/contentprocessor:${{ env.DATE_TAG }}
 
-      - name: Build and push ContentProcessorAPI Docker image
-        run: |
-          cd src/ContentProcessorAPI
-          IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessorapi"
-          echo "Using image name: ${IMAGE_NAME}"
-          docker build -t ${IMAGE_NAME}:${BASE_TAG} -t ${IMAGE_NAME}:${DATE_TAG} -f Dockerfile .
-          if [[ "${BASE_TAG}" == "latest" || "${BASE_TAG}" == "dev" || "${BASE_TAG}" == "demo" || "${BASE_TAG}" == "hotfix" ]]; then
-            docker push ${IMAGE_NAME}:${BASE_TAG}
-            docker push ${IMAGE_NAME}:${DATE_TAG}
-            echo "ContentProcessorAPI image built and pushed successfully."
-          else
-            echo "Skipping Docker push for ContentProcessorAPI with tag: ${BASE_TAG}"
-          fi
+      - name: Build and Push ContentProcessorAPI Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src/ContentProcessorAPI
+          file: ./src/ContentProcessorAPI/Dockerfile
+          push: ${{ github.ref_name == 'main' || github.ref_name == 'dev' || github.ref_name == 'demo' || github.ref_name == 'hotfix' }}
+          tags: |
+            ${{ env.ACR_LOGIN_SERVER }}/contentprocessorapi:${{ env.BASE_TAG }}
+            ${{ env.ACR_LOGIN_SERVER }}/contentprocessorapi:${{ env.DATE_TAG }}
 
-      - name: Build and push ContentProcessorWeb Docker image
-        run: |
-          cd src/ContentProcessorWeb
-          IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessorweb"
-          echo "Using image name: ${IMAGE_NAME}"
-          docker build -t ${IMAGE_NAME}:${BASE_TAG} -t ${IMAGE_NAME}:${DATE_TAG} -f Dockerfile .
-          if [[ "${BASE_TAG}" == "latest" || "${BASE_TAG}" == "dev" || "${BASE_TAG}" == "demo" || "${BASE_TAG}" == "hotfix" ]]; then
-            docker push ${IMAGE_NAME}:${BASE_TAG}
-            docker push ${IMAGE_NAME}:${DATE_TAG}
-            echo "ContentProcessorWeb image built and pushed successfully."
-          else
-            echo "Skipping Docker push for ContentProcessorWeb with tag: ${BASE_TAG}"
-          fi
+      - name: Build and Push ContentProcessorWeb Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src/ContentProcessorWeb
+          file: ./src/ContentProcessorWeb/Dockerfile
+          push: ${{ github.ref_name == 'main' || github.ref_name == 'dev' || github.ref_name == 'demo' || github.ref_name == 'hotfix' }}
+          tags: |
+            ${{ env.ACR_LOGIN_SERVER }}/contentprocessorweb:${{ env.BASE_TAG }}
+            ${{ env.ACR_LOGIN_SERVER }}/contentprocessorweb:${{ env.DATE_TAG }}
