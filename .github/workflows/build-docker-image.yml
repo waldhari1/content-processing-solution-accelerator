@@ -40,6 +40,7 @@ jobs:
         run: |
           BRANCH="${{ github.ref_name }}"
           DATE="${{ steps.date.outputs.date }}"
+          GITHUB_RUN_NUMBER: "${{ github.run_number }}"
           if [[ "$BRANCH" == "main" ]]; then
             BASE_TAG="latest"
           elif [[ "$BRANCH" == "dev" ]]; then
@@ -51,7 +52,7 @@ jobs:
           else
             BASE_TAG="pullrequest-ignore"
           fi
-          DATE_TAG="${BASE_TAG}_${DATE}_${github.run_number}"
+          DATE_TAG="${BASE_TAG}_${DATE}_${GITHUB_RUN_NUMBER}"
           echo "BASE_TAG=${BASE_TAG}" >> $GITHUB_ENV
           echo "DATE_TAG=${DATE_TAG}" >> $GITHUB_ENV
           echo "Base tag: $BASE_TAG, Date tag: $DATE_TAG"
