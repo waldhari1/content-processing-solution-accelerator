@@ -23,6 +23,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
       - name: Log in to Azure Container Registry
         if: ${{ github.ref_name == 'main' || github.ref_name == 'dev' || github.ref_name == 'demo' || github.ref_name == 'hotfix' }}
         uses: azure/docker-login@v2
@@ -31,19 +35,19 @@ jobs:
           username: ${{ env.ACR_USERNAME }}
           password: ${{ env.ACR_PASSWORD }}
 
-      - name: Set Docker image tag
+      - name: Set Docker image tag with Date
         run: |
           echo "Determining tag for branch: ${{ github.ref }}"
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "TAG=latest" >> $GITHUB_ENV
+            echo "TAG=latest-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
           elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            echo "TAG=dev" >> $GITHUB_ENV
+            echo "TAG=dev-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
           elif [[ "${{ github.ref }}" == "refs/heads/demo" ]]; then
-            echo "TAG=demo" >> $GITHUB_ENV
+            echo "TAG=demo-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
           elif [[ "${{ github.ref }}" == "refs/heads/hotfix" ]]; then
-            echo "TAG=hotfix" >> $GITHUB_ENV
+            echo "TAG=hotfix-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
           else
-            echo "TAG=pullrequest-ignore" >> $GITHUB_ENV
+            echo "TAG=pullrequest-ignore-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
           fi
           echo "Tag set to: $TAG"
 
@@ -53,7 +57,7 @@ jobs:
           IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessor:${TAG}"
           echo "Using image name: ${IMAGE_NAME}"
           docker build -t ${IMAGE_NAME} -f .devcontainer/Dockerfile .
-          if [[ "${TAG}" == "latest" || "${TAG}" == "dev" || "${TAG}" == "demo" || "${TAG}" == "hotfix" ]]; then
+          if [[ "${TAG}" == latest-* || "${TAG}" == dev-* || "${TAG}" == demo-* || "${TAG}" == hotfix-* ]]; then
             docker push ${IMAGE_NAME}
             echo "ContentProcessor image built and pushed successfully."
           else
@@ -66,7 +70,7 @@ jobs:
           IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessorapi:${TAG}"
           echo "Using image name: ${IMAGE_NAME}"
           docker build -t ${IMAGE_NAME} -f .devcontainer/Dockerfile .
-          if [[ "${TAG}" == "latest" || "${TAG}" == "dev" || "${TAG}" == "demo" || "${TAG}" == "hotfix" ]]; then
+          if [[ "${TAG}" == latest-* || "${TAG}" == dev-* || "${TAG}" == demo-* || "${TAG}" == hotfix-* ]]; then
             docker push ${IMAGE_NAME}
             echo "ContentProcessorAPI image built and pushed successfully."
           else
@@ -79,7 +83,7 @@ jobs:
           IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessorweb:${TAG}"
           echo "Using image name: ${IMAGE_NAME}"
           docker build -t ${IMAGE_NAME} -f .devcontainer/base.Dockerfile .
-          if [[ "${TAG}" == "latest" || "${TAG}" == "dev" || "${TAG}" == "demo" || "${TAG}" == "hotfix" ]]; then
+          if [[ "${TAG}" == latest-* || "${TAG}" == dev-* || "${TAG}" == demo-* || "${TAG}" == hotfix-* ]]; then
             docker push ${IMAGE_NAME}
             echo "ContentProcessorWeb image built and pushed successfully."
           else
