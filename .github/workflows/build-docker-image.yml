@@ -1,0 +1,94 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches: [main, dev, demo, hotfix]
+  pull_request:
+    branches: [main, dev, demo, hotfix]
+    types: [opened, ready_for_review, reopened, synchronize]
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    env:
+      ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Log in to Azure Container Registry
+        if: ${{ github.ref_name == 'main' || github.ref_name == 'dev' || github.ref_name == 'demo' || github.ref_name == 'hotfix' }}
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ env.ACR_LOGIN_SERVER }}
+          username: ${{ env.ACR_USERNAME }}
+          password: ${{ env.ACR_PASSWORD }}
+
+      - name: Set Docker image tag with Date
+        run: |
+          echo "Determining tag for branch: ${{ github.ref }}"
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "TAG=latest-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            echo "TAG=dev-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == "refs/heads/demo" ]]; then
+            echo "TAG=demo-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == "refs/heads/hotfix" ]]; then
+            echo "TAG=hotfix-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
+          else
+            echo "TAG=pullrequest-ignore-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
+          fi
+          echo "Tag set to: $TAG"
+
+      - name: Build and push ContentProcessor Docker image
+        run: |
+          cd src/ContentProcessor
+          IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessor:${TAG}"
+          echo "Using image name: ${IMAGE_NAME}"
+          # Use the Dockerfile from the root folder of ContentProcessor
+          docker build -t ${IMAGE_NAME} -f Dockerfile .
+          if [[ "${TAG}" == latest-* || "${TAG}" == dev-* || "${TAG}" == demo-* || "${TAG}" == hotfix-* ]]; then
+            docker push ${IMAGE_NAME}
+            echo "ContentProcessor image built and pushed successfully."
+          else
+            echo "Skipping Docker push for ContentProcessor with tag: ${TAG}"
+          fi
+
+      - name: Build and push ContentProcessorAPI Docker image
+        run: |
+          cd src/ContentProcessorAPI
+          IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessorapi:${TAG}"
+          echo "Using image name: ${IMAGE_NAME}"
+          # Use the Dockerfile from the root folder of ContentProcessorAPI
+          docker build -t ${IMAGE_NAME} -f Dockerfile .
+          if [[ "${TAG}" == latest-* || "${TAG}" == dev-* || "${TAG}" == demo-* || "${TAG}" == hotfix-* ]]; then
+            docker push ${IMAGE_NAME}
+            echo "ContentProcessorAPI image built and pushed successfully."
+          else
+            echo "Skipping Docker push for ContentProcessorAPI with tag: ${TAG}"
+          fi
+
+      - name: Build and push ContentProcessorWeb Docker image
+        run: |
+          cd src/ContentProcessorWeb
+          IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessorweb:${TAG}"
+          echo "Using image name: ${IMAGE_NAME}"
+          # Use the Dockerfile from the root folder of ContentProcessorWeb
+          docker build -t ${IMAGE_NAME} -f Dockerfile .
+          if [[ "${TAG}" == latest-* || "${TAG}" == dev-* || "${TAG}" == demo-* || "${TAG}" == hotfix-* ]]; then
+            docker push ${IMAGE_NAME}
+            echo "ContentProcessorWeb image built and pushed successfully."
+          else
+            echo "Skipping Docker push for ContentProcessorWeb with tag: ${TAG}"
+          fi
