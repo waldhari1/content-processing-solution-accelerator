@@ -51,7 +51,7 @@ jobs:
           else
             BASE_TAG="pullrequest-ignore"
           fi
-          DATE_TAG="${BASE_TAG}-${DATE}"
+          DATE_TAG="${BASE_TAG}_${DATE}_${github.run_number}"
           echo "BASE_TAG=${BASE_TAG}" >> $GITHUB_ENV
           echo "DATE_TAG=${DATE_TAG}" >> $GITHUB_ENV
           echo "Base tag: $BASE_TAG, Date tag: $DATE_TAG"
