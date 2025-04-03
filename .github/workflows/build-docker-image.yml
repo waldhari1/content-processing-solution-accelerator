@@ -35,60 +35,67 @@ jobs:
           username: ${{ env.ACR_USERNAME }}
           password: ${{ env.ACR_PASSWORD }}
 
-      - name: Set Docker image tag with Date
+      - name: Set Docker image tags
+        id: tag
         run: |
-          echo "Determining tag for branch: ${{ github.ref }}"
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "TAG=latest-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            echo "TAG=dev-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/demo" ]]; then
-            echo "TAG=demo-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/hotfix" ]]; then
-            echo "TAG=hotfix-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
+          BRANCH="${{ github.ref_name }}"
+          DATE="${{ steps.date.outputs.date }}"
+          if [[ "$BRANCH" == "main" ]]; then
+            BASE_TAG="latest"
+          elif [[ "$BRANCH" == "dev" ]]; then
+            BASE_TAG="dev"
+          elif [[ "$BRANCH" == "demo" ]]; then
+            BASE_TAG="demo"
+          elif [[ "$BRANCH" == "hotfix" ]]; then
+            BASE_TAG="hotfix"
           else
-            echo "TAG=pullrequest-ignore-${{ steps.date.outputs.date }}" >> $GITHUB_ENV
+            BASE_TAG="pullrequest-ignore"
           fi
-          echo "Tag set to: $TAG"
+          DATE_TAG="${BASE_TAG}-${DATE}"
+          echo "BASE_TAG=${BASE_TAG}" >> $GITHUB_ENV
+          echo "DATE_TAG=${DATE_TAG}" >> $GITHUB_ENV
+          echo "Base tag: $BASE_TAG, Date tag: $DATE_TAG"
 
       - name: Build and push ContentProcessor Docker image
         run: |
           cd src/ContentProcessor
-          IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessor:${TAG}"
+          IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessor"
           echo "Using image name: ${IMAGE_NAME}"
-          # Use the Dockerfile from the root folder of ContentProcessor
-          docker build -t ${IMAGE_NAME} -f Dockerfile .
-          if [[ "${TAG}" == latest-* || "${TAG}" == dev-* || "${TAG}" == demo-* || "${TAG}" == hotfix-* ]]; then
-            docker push ${IMAGE_NAME}
+          # Build image with two tags: one base and one with date
+          docker build -t ${IMAGE_NAME}:${BASE_TAG} -t ${IMAGE_NAME}:${DATE_TAG} -f Dockerfile .
+          # Push both tags if the base tag is valid
+          if [[ "${BASE_TAG}" == "latest" || "${BASE_TAG}" == "dev" || "${BASE_TAG}" == "demo" || "${BASE_TAG}" == "hotfix" ]]; then
+            docker push ${IMAGE_NAME}:${BASE_TAG}
+            docker push ${IMAGE_NAME}:${DATE_TAG}
             echo "ContentProcessor image built and pushed successfully."
           else
-            echo "Skipping Docker push for ContentProcessor with tag: ${TAG}"
+            echo "Skipping Docker push for ContentProcessor with tag: ${BASE_TAG}"
           fi
 
       - name: Build and push ContentProcessorAPI Docker image
         run: |
           cd src/ContentProcessorAPI
-          IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessorapi:${TAG}"
+          IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessorapi"
           echo "Using image name: ${IMAGE_NAME}"
-          # Use the Dockerfile from the root folder of ContentProcessorAPI
-          docker build -t ${IMAGE_NAME} -f Dockerfile .
-          if [[ "${TAG}" == latest-* || "${TAG}" == dev-* || "${TAG}" == demo-* || "${TAG}" == hotfix-* ]]; then
-            docker push ${IMAGE_NAME}
+          docker build -t ${IMAGE_NAME}:${BASE_TAG} -t ${IMAGE_NAME}:${DATE_TAG} -f Dockerfile .
+          if [[ "${BASE_TAG}" == "latest" || "${BASE_TAG}" == "dev" || "${BASE_TAG}" == "demo" || "${BASE_TAG}" == "hotfix" ]]; then
+            docker push ${IMAGE_NAME}:${BASE_TAG}
+            docker push ${IMAGE_NAME}:${DATE_TAG}
             echo "ContentProcessorAPI image built and pushed successfully."
           else
-            echo "Skipping Docker push for ContentProcessorAPI with tag: ${TAG}"
+            echo "Skipping Docker push for ContentProcessorAPI with tag: ${BASE_TAG}"
           fi
 
       - name: Build and push ContentProcessorWeb Docker image
         run: |
           cd src/ContentProcessorWeb
-          IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessorweb:${TAG}"
+          IMAGE_NAME="$ACR_LOGIN_SERVER/contentprocessorweb"
           echo "Using image name: ${IMAGE_NAME}"
-          # Use the Dockerfile from the root folder of ContentProcessorWeb
-          docker build -t ${IMAGE_NAME} -f Dockerfile .
-          if [[ "${TAG}" == latest-* || "${TAG}" == dev-* || "${TAG}" == demo-* || "${TAG}" == hotfix-* ]]; then
-            docker push ${IMAGE_NAME}
+          docker build -t ${IMAGE_NAME}:${BASE_TAG} -t ${IMAGE_NAME}:${DATE_TAG} -f Dockerfile .
+          if [[ "${BASE_TAG}" == "latest" || "${BASE_TAG}" == "dev" || "${BASE_TAG}" == "demo" || "${BASE_TAG}" == "hotfix" ]]; then
+            docker push ${IMAGE_NAME}:${BASE_TAG}
+            docker push ${IMAGE_NAME}:${DATE_TAG}
             echo "ContentProcessorWeb image built and pushed successfully."
           else
-            echo "Skipping Docker push for ContentProcessorWeb with tag: ${TAG}"
+            echo "Skipping Docker push for ContentProcessorWeb with tag: ${BASE_TAG}"
           fi
