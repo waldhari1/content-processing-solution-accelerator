@@ -4,7 +4,7 @@ This document provides step-by-step instructions to configure Azure App Registra
 
 ## Prerequisites
 
-- Access to **Azure Active Directory (Azure AD)**
+- Access to **Microsoft Entra ID**
 - Necessary permissions to create and manage **App Registrations**
 
 ## Step 1: Add Authentication Provider
@@ -19,7 +19,12 @@ We will add Microsoft Entra ID as an authentication provider to API and Web Appl
    - Select **Microsoft** and set **Client secret expiration**, then click **Add** button.  
      ![add_auth_provider_web_2](./Images/add_auth_provider_web_2.png)
 
-2. Add Authentication Provider in API Service
+> **Note:** If you encounter the following error message indicating that your organization's policy prohibits the automatic use of secrets, please refer to our [Manual App Registration Configuration](./ManualAppRegistrationConfiguration.md) for detailed manual setup instructions.
+>  ![add_auth_provider_web_3](./Images/add_auth_provider_web_3.png)
+
+
+
+1. Add Authentication Provider in API Service
 
    - Go to deployed Container App and select `ca-cps-<randomname>-api` and click **Add Identity Provider** button in Authentication.  
      ![add_auth_provider_api_1](./Images/add_auth_provider_api_1.png)
@@ -57,6 +62,10 @@ We will add Microsoft Entra ID as an authentication provider to API and Web Appl
 
    - Grant admin consent to permissions.  
      ![configure_app_registration_web_8](./Images/configure_app_registration_web_8.png)
+
+     > ⚠️ **Granting Admin Consent:** If you don't have permission or aren't able to grant admin consent for the API permissions, please follow one of the steps below:<br/><br/>_Option 1 - Reach out to your Tenant Administrator:_ Contact your administrator to let them know your Application Registration ID and what permissions you woud like to have them consent and approve.<br/><br/>_Option 2 - Internal Microsoft Employees Only:_ Please refer to these detailed instructions on the admin consent granting process: [https://aka.ms/AzAdminConsentWiki](https://aka.ms/AzAdminConsentWiki)
+     
+
 
 3. Grab Scope Name for Impersonation
 
