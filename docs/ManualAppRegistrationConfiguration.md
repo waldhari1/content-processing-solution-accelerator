@@ -1,14 +1,14 @@
 # Manual App Registration Configuration
-This guide provides detailed steps to manually register both front-end and backend applications in Azure if automated registration is not an option.
+This guide provides detailed steps to manually register both front-end and backend applications in Azure if automated registration is not an option due to security in place in your tenant and subscription.
 
 ## Prerequisites
 
-- Access to **Azure Active Directory (Azure AD)**
-- Necessary permissions to create and manage **App Registrations**
+- Access to **Microsoft Entra ID**
+- Necessary permissions to create and manage **App Registrations** in your Azure tenant
 
 ## Step 1: Register the Web Application
 ### 1. Create App Registration
-- Go to **Azure Portal** > **Azure Active Directory** > **App registrations**
+- Go to **Azure Portal** > **Microsoft Entra ID** > **Manage** > **App registrations**
 - Click **+ New registration**
 - Name the app (e.g., `cps-app-web`)
 - Under **Redirect URI**, choose **Web** and enter:
@@ -72,7 +72,7 @@ This guide provides detailed steps to manually register both front-end and backe
 ## Step 2: Register API Application
 
 ### 1. Create App Registration
-- Go to **Azure Portal** > **Azure Active Directory** > **App registrations**
+- Go to **Azure Portal** > **Microsoft Entra ID** > **Manage** > **App registrations**
 - Click **+ New registration**
 - Name the app (e.g., `cps-app-api`)
 - Under **Redirect URI**, choose **Web** and enter:
