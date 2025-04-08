@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@fluentui/react-components";
 import { ArrowClockwiseRegular, ArrowUploadRegular } from "@fluentui/react-icons";
 import PanelToolbar from "../../Hooks/usePanelHooks.tsx";
-import GridComponent from '../../Components/FluentComponents/GridComponent/GridComponent.tsx';
-import ComboboxComponent from '../../Components/FluentComponents/Combobox/Combobox';
-import UploadFilesModal from "../../Components/UploadContent/UploadFilesModal";
+import ProcessQueueGrid from './Components/ProcessQueueGrid/ProcessQueueGrid.tsx';
+import SchemaDropdown from './Components/SchemaDropdown/SchemaDropdown';
+import UploadFilesModal from "../../Components/UploadContent/UploadFilesModal.tsx";
 
-import { useDispatch, useSelector,shallowEqual } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { fetchSchemaData, fetchContentTableData } from '../../store/slices/leftPanelSlice.ts';
-import { AppDispatch,RootState } from '../../store';
-import { startLoader, stopLoader } from "../../store/slices/loaderSlice";
+import { AppDispatch, RootState } from '../../store/index.ts';
+import { startLoader, stopLoader } from "../../store/slices/loaderSlice.ts";
 import { toast } from "react-toastify";
 
 interface PanelLeftProps {
@@ -22,9 +22,9 @@ const PanelLeft: React.FC<PanelLeftProps> = () => {
 
   const store = useSelector((state: RootState) => ({
     schemaSelectedOption: state.leftPanel.schemaSelectedOption,
-    page_size : state.leftPanel.gridData.page_size,
+    page_size: state.leftPanel.gridData.page_size,
     pageSize: state.leftPanel.pageSize
-  }),shallowEqual );
+  }), shallowEqual);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,7 +51,7 @@ const PanelLeft: React.FC<PanelLeftProps> = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      dispatch(stopLoader("1")); 
+      dispatch(stopLoader("1"));
     }
   }
 
@@ -60,12 +60,13 @@ const PanelLeft: React.FC<PanelLeftProps> = () => {
       <PanelToolbar icon={null} header="Processing Queue"></PanelToolbar>
 
       <div style={({ display: "flex", flexWrap: 'wrap', alignItems: "end", gap: "10px", padding: "0px 16px 16px 16px" })}>
-        <ComboboxComponent />
+        <SchemaDropdown />
         <Button appearance="primary" icon={<ArrowUploadRegular />} onClick={() => {
-          if(Object.keys(store.schemaSelectedOption).length === 0) 
+          if (Object.keys(store.schemaSelectedOption).length === 0)
             toast.error("Please Select Schema");
-          else 
-          setIsModalOpen(true)}
+          else
+            setIsModalOpen(true)
+        }
         }
         >
           Import Content
@@ -76,7 +77,7 @@ const PanelLeft: React.FC<PanelLeftProps> = () => {
         </Button>
       </div>
       <div className="leftcontent">
-        <GridComponent />
+        <ProcessQueueGrid />
       </div>
     </div>
   );

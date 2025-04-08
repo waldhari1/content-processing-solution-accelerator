@@ -126,7 +126,7 @@ const ContentDevelopers: React.FC<ContentProps> = ({
     isSavingInProgress: state.centerPanel.isSavingInProgress,
     processStepsData: state.centerPanel.processStepsData,
     selectedItem : state.leftPanel.selectedItem,
-    activeProcessId : state.centerPanel.activeProcessId
+    activeProcessId : state.centerPanel.activeProcessId,
   }), shallowEqual
   );
 
@@ -184,7 +184,7 @@ const ContentDevelopers: React.FC<ContentProps> = ({
         />
       ) : <p style={{textAlign:'center'}}>No data available</p>}
     </div>
-  ), [store.activeProcessId,store.selectedItem]);
+  ), [store.activeProcessId,store.selectedItem,store.contentData]);
 
   const ProcessHistory = useCallback(() => (
     <div role="tabpanel" className={styles.processTabItemCotnent} aria-labelledby="Process Steps">

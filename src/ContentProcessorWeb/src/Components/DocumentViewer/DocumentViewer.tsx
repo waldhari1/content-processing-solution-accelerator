@@ -28,7 +28,7 @@ const DocumentViewer = ({ className, metadata, urlWithSasToken, iframeKey }: IIF
 
     const getContentComponent = () => {
         if (!metadata || !urlWithSasToken) {
-            return <div style={{ textAlign: 'center' }}>{t("components.document.none", "No document available")}</div>;
+            return <div className={"noDataDocContainer"}><p>{t("components.document.none", "No document available")}</p></div>;
         }
 
         switch (metadata.mimeType) {

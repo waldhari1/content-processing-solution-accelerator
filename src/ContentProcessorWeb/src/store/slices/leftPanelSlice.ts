@@ -10,9 +10,11 @@ interface LeftPanelState {
     schemaLoader: boolean;
     schemaSelectedOption: any;
     gridData: any;
+    gridLoader: boolean;
     processId: string | null;
     selectedItem: any;
     pageSize : number;
+    deleteFilesLoader: string[]
 }
 
 interface UploadMetadata {
@@ -41,6 +43,21 @@ export const fetchContentTableData = createAsyncThunk<any, { pageSize: number; p
         page_number: pageNumber,
     });
     return response;
+});
+
+interface DeleteApiResponse {
+    process_id: string;
+    status: string;
+    message: string;
+  }
+export const deleteProcessedFile = createAsyncThunk<any, { processId: string | null }>('/contentprocessor/deleteProcessedFile/', async ({ processId }, {rejectWithValue}) => {
+    if (!processId) {
+        return rejectWithValue("Reset store");
+    }
+    const url = '/contentprocessor/processed/' + processId;
+    const response = await httpUtility.delete(url);
+    console.log("response", response);
+    return response as DeleteApiResponse; ;
 });
 
 export const uploadFile = createAsyncThunk<
@@ -89,9 +106,13 @@ const initialState: LeftPanelState = {
     schemaError: null,
 
     gridData: {...gridDefaultVal},
+    gridLoader : false,
     processId: null,
     selectedItem: {},
     pageSize : 500,
+
+    deleteFilesLoader : [],
+    
 };
 
 const leftPanelSlice = createSlice({
@@ -126,16 +147,17 @@ const leftPanelSlice = createSlice({
         builder
             .addCase(fetchContentTableData.pending, (state) => {
                 //state.schemaError = null;
+                state.gridLoader = true;
                 state.gridData = {...gridDefaultVal};
             })
             .addCase(fetchContentTableData.fulfilled, (state, action: PayloadAction<any>) => { // Adjust `any` to the response data type
                 //state.schemaLoader = false;
-                state.gridData = action.payload
+                state.gridData = action.payload;
+                state.gridLoader = false;
             })
             .addCase(fetchContentTableData.rejected, (state, action) => {
-                // state.schemaError = action.error.message || 'An error occurred';
-                //state.schemaLoader = false;
-                //console.error("Error fetching content table data : ", action.error.message || 'An error occurred');
+                state.gridLoader = false;
+                toast.error('Something went wrong!')
             });
 
 
@@ -155,6 +177,31 @@ const leftPanelSlice = createSlice({
             });
 
 
+         //Fetch Grid Data
+         builder
+         .addCase(deleteProcessedFile.pending, (state, action) => {
+            const processId = action.meta.arg.processId;
+            if (processId) {
+                state.deleteFilesLoader.push(processId);
+            }
+        })
+        .addCase(deleteProcessedFile.fulfilled, (state, action) => {
+            const processId = action.meta.arg.processId;
+            if (processId) {
+                state.deleteFilesLoader = state.deleteFilesLoader.filter(id => id !== processId);
+            }
+            if(action.payload.status === 'Success')
+                toast.success("Record deleted successfully!")
+            else 
+             toast.error(action.payload.message)
+        })
+        .addCase(deleteProcessedFile.rejected, (state, action) => {
+            const processId = action.meta.arg.processId;
+            if (processId) {
+                state.deleteFilesLoader = state.deleteFilesLoader.filter(id => id !== processId);
+                toast.error("Something went wrong!")
+            }
+        });
     },
 });
 
