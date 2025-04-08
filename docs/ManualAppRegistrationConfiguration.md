@@ -132,4 +132,4 @@ This guide provides detailed steps to manually register both front-end and backe
 
 You have now manually configured Azure App Registrations.
 
-For further configuration and steps, proceed to Step 2 in [Configure App Authentication](./ConfigureAppAuthentication.md).
+For further configuration and steps, proceed to Step 2 in [Configure App Authentication](./ConfigureAppAuthentication.md#step-2-configure-application-registration---web-application).
