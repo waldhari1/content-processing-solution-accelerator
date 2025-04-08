@@ -4,7 +4,7 @@ This document provides step-by-step instructions to configure Azure App Registra
 
 ## Prerequisites
 
-- Access to **Azure Active Directory (Azure AD)**
+- Access to **Microsoft Entra ID**
 - Necessary permissions to create and manage **App Registrations**
 
 ## Step 1: Add Authentication Provider
@@ -19,7 +19,9 @@ We will add Microsoft Entra ID as an authentication provider to API and Web Appl
    - Select **Microsoft** and set **Client secret expiration**, then click **Add** button.  
      ![add_auth_provider_web_2](./Images/add_auth_provider_web_2.png)
 
-  > **Note:** If you encounter issues with this automatic process or if the script cannot complete as expected, please refer to our [Manual App Registration Configuration](./ManualAppRegistrationConfiguration.md) for detailed manual setup instructions.
+> **Note:** If you encounter the following error message indicating that your organization's policy prohibits the automatic use of secrets, please refer to our [Manual App Registration Configuration](./ManualAppRegistrationConfiguration.md) for detailed manual setup instructions.
+>  ![add_auth_provider_web_3](./Images/add_auth_provider_web_3.png)
+
 
 
 1. Add Authentication Provider in API Service
