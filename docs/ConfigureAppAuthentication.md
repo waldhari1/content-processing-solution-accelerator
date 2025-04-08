@@ -19,7 +19,10 @@ We will add Microsoft Entra ID as an authentication provider to API and Web Appl
    - Select **Microsoft** and set **Client secret expiration**, then click **Add** button.  
      ![add_auth_provider_web_2](./Images/add_auth_provider_web_2.png)
 
-2. Add Authentication Provider in API Service
+  > **Note:** If you encounter issues with this automatic process or if the script cannot complete as expected, please refer to our [Manual App Registration Configuration](./ManualAppRegistrationConfiguration.md) for detailed manual setup instructions.
+
+
+1. Add Authentication Provider in API Service
 
    - Go to deployed Container App and select `ca-cps-<randomname>-api` and click **Add Identity Provider** button in Authentication.  
      ![add_auth_provider_api_1](./Images/add_auth_provider_api_1.png)
