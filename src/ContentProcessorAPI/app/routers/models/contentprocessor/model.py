@@ -64,6 +64,11 @@ class ContentResultUpdate(BaseModel):
     process_id: str
     modified_result: dict
 
+class ContentResultDelete(BaseModel):
+    process_id: str
+    status: str
+    message: str
+
 
 class ContentCommentUpdate(BaseModel):
     process_id: str

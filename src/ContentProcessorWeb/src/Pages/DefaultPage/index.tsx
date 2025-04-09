@@ -1,9 +1,10 @@
 import * as React from "react";
 
-import ContentDevelopers from "./DefaultPageContent.tsx";
-import PanelLeft from "./DefaultPagePanelLeft.tsx";
-import PanelRight from "./DefaultPagePanelRight.tsx";
+import PanelCenter from "./PanelCenter.tsx";
+import PanelLeft from "./PanelLeft.tsx";
+import PanelRight from "./PanelRight.tsx";
 import { makeStyles } from "@fluentui/react-components";
+import './Panels.styles.scss';
 
 // AppHooks
 import { useAppHooks } from "../../Hooks/useAppHooks.tsx";
@@ -16,12 +17,11 @@ const Page: React.FC = () => {
       {isPanelOpen && (
         <div className="panelLeft" style={{ flex: "37%", minWidth: "300px" }}>
           <PanelLeft />
-         
         </div>
       )}
 
-      <div className="contentContainer" style={{ flex: "31%", minWidth: "280px", background: 'white', border: "2px solid #D6D6D6", borderWidth: "2px 2px 0px 0px" }}>
-        <ContentDevelopers
+      <div className="panelCenter" style={{ flex: "31%", minWidth: "280px", background: 'white', border: "2px solid #D6D6D6", borderWidth: "2px 2px 0px 0px" }}>
+        <PanelCenter
           isPanelOpen={isPanelOpen}
           togglePanel={togglePanel}
           isRightPanelOpen={isRightPanelOpen}

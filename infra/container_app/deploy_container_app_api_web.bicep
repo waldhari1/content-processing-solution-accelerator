@@ -146,6 +146,10 @@ module containerAppWeb 'deploy_container_app.bicep' = {
         name: 'APP_MSAL_TOKEN_SCOPE'
         value: '<BACKEND_API_SCOPE>'
       }
+      {
+        name: 'APP_ISLOGS_ENABLED'
+        value: 'false'
+      }
     ]
     minReplicas: minReplicaContainerWeb
     maxReplicas: maxReplicaContainerWeb

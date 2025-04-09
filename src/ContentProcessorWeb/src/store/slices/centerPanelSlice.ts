@@ -115,6 +115,8 @@ const centerPanelSlice = createSlice({
             .addCase(fetchContentJsonData.rejected, (state, action) => {
                 state.cError = action.error.message || 'An error occurred';
                 state.cLoader = false;
+                state.contentData = [];
+                state.comments = "";
                 //console.error("Error fetching JSON data:", action.error.message || 'An error occurred');
             });
 
@@ -127,8 +129,9 @@ const centerPanelSlice = createSlice({
                 toast.success("Data saved successfully!"); // Success toast
                 state.isSavingInProgress = false;
             })
-            .addCase(saveContentJson.rejected, (state, action) => {
-                toast.error("Date saving failed !");
+            .addCase(saveContentJson.rejected, (state, action : any) => {
+                console.log("action", action)
+                toast.error(JSON.parse(action.error.message).message);
                 state.isSavingInProgress = false;
             });
 

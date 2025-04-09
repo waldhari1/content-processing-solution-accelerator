@@ -43,6 +43,8 @@ const PanelRight: React.FC<PanelRightProps> = () => {
     const isExists = isBlobExists();
     if(store.fileResponse.length > 0 && isExists && isExists.processId == store.processId){
       setFileData({ 'urlWithSasToken': isExists.blobURL, 'mimeType': isExists.headers['content-type'] })
+    }else {
+      setFileData({ 'urlWithSasToken': '', 'mimeType': '' })
     }
   },[store.processId, store.fileResponse])
 

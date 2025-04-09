@@ -24,14 +24,18 @@ const JSONEditor: React.FC<JSONEditorProps> = () => {
 
 
   useEffect(() => {
-    if (Object.keys(store.contentData).length > 0) {
-      const formattedJson = store.contentData.result;
-      const data = {
-        extracted_result: {
-          ...formattedJson
+    if(!store.cLoader){
+      if (Object.keys(store.contentData).length > 0) {
+        const formattedJson = store.contentData.result;
+        const data = {
+          extracted_result: {
+            ...formattedJson
+          }
         }
+        setJsonData(data);
+      }else {
+        setJsonData({})
       }
-      setJsonData(data);
     }
 
   }, [store.contentData])
@@ -42,7 +46,8 @@ const JSONEditor: React.FC<JSONEditorProps> = () => {
 
   return (
     <>{
-      store.cLoader ? <div className={"JSONEditorLoader"}><p>Loading...</p></div> :
+      store.cLoader ? <div className={"JSONEditorLoader"}><p>Loading...</p></div> : 
+      Object.keys(jsonData).length == 0 ? <p style={{textAlign:'center'}}>No data available</p> : 
         <JsonEditor
           data={jsonData}
           className='JSONEditorClass'
