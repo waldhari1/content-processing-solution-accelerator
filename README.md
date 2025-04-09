@@ -55,6 +55,10 @@ QUICK DEPLOY
 
 Follow the [quick deploy steps on the deployment guide](./docs/DeploymentGuide.md) to deploy this solution to your own Azure subscription.
 
+### ⚠️ Important: Check Azure OpenAI Quota Availability  
+
+➡️ To ensure sufficient quota is available in your subscription, please follow **[Quota check instructions guide](./docs/quota_check.md)** before you deploy the solution.
+
 | [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/microsoft/content-processing-solution-accelerator) | [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/content-processing-solution-accelerator) | 
 |---|---|
 
