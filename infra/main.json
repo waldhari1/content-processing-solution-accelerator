@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.34.44.8038",
-      "templateHash": "14103938519671400586"
+      "templateHash": "17985360808056860425"
     }
   },
   "parameters": {
@@ -21,7 +21,7 @@
       "type": "string",
       "defaultValue": "EastUs2",
       "metadata": {
-        "description": "Location used for Cosmos DB, Container App deployment"
+        "description": "Location used for Azure Cosmos DB, Azure Container App deployment"
       }
     },
     "contentUnderstandingLocation": {
@@ -35,7 +35,7 @@
         "azd": {
           "type": "location"
         },
-        "description": "Location for the Content Understanding service deployment:"
+        "description": "Location for the Azure AI Content Understanding service deployment:"
       },
       "minLength": 1
     },
@@ -362,7 +362,8 @@
     "solutionPrefix": "[format('cps-{0}', padLeft(take(variables('uniqueId'), 12), 12, '0'))]",
     "containerImageEndPoint": "cpscontainerreg.azurecr.io",
     "resourceGroupLocation": "[resourceGroup().location]",
-    "abbrs": "[variables('$fxv#0')]"
+    "abbrs": "[variables('$fxv#0')]",
+    "useLocalBuildLower": "[toLower(parameters('useLocalBuild'))]"
   },
   "resources": [
     {
@@ -934,7 +935,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.34.44.8038",
-              "templateHash": "13228064894943437182"
+              "templateHash": "6622167858340258597"
             }
           },
           "parameters": {
@@ -1432,147 +1433,6 @@
               "dependsOn": [
                 "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('aiHubName'))]"
               ]
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'TENANT-ID')]",
-              "properties": {
-                "value": "[subscription().tenantId]"
-              }
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'AZURE-OPENAI-KEY')]",
-              "properties": {
-                "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName')), '2021-10-01').key1]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'AZURE-OPEN-AI-DEPLOYMENT-MODEL')]",
-              "properties": {
-                "value": "[parameters('gptModelName')]"
-              }
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'AZURE-OPENAI-PREVIEW-API-VERSION')]",
-              "properties": {
-                "value": "[parameters('gptModelVersion')]"
-              }
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'AZURE-OPENAI-ENDPOINT')]",
-              "properties": {
-                "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName')), '2021-10-01').endpoint]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'AZURE-AI-PROJECT-CONN-STRING')]",
-              "properties": {
-                "value": "[format('{0};{1};{2};{3}', split(reference(resourceId('Microsoft.MachineLearningServices/workspaces', variables('aiProjectName')), '2024-01-01-preview').discoveryUrl, '/')[2], subscription().subscriptionId, resourceGroup().name, variables('aiProjectName'))]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('aiProjectName'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'AZURE-OPENAI-CU-ENDPOINT')]",
-              "properties": {
-                "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName_cu')), '2021-10-01').endpoint]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName_cu'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'AZURE-OPENAI-CU-KEY')]",
-              "properties": {
-                "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName_cu')), '2021-10-01').key1]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName_cu'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'AZURE-OPENAI-CU-VERSION')]",
-              "properties": {
-                "value": "?api-version=2024-12-01-preview"
-              }
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'COG-SERVICES-ENDPOINT')]",
-              "properties": {
-                "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName')), '2021-10-01').endpoint]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'COG-SERVICES-KEY')]",
-              "properties": {
-                "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName')), '2021-10-01').key1]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'COG-SERVICES-NAME')]",
-              "properties": {
-                "value": "[variables('aiServicesName')]"
-              }
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'AZURE-SUBSCRIPTION-ID')]",
-              "properties": {
-                "value": "[subscription().subscriptionId]"
-              }
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'AZURE-RESOURCE-GROUP')]",
-              "properties": {
-                "value": "[resourceGroup().name]"
-              }
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'AZURE-LOCATION')]",
-              "properties": {
-                "value": "[parameters('solutionLocation')]"
-              }
             }
           ],
           "outputs": {
@@ -1795,7 +1655,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.34.44.8038",
-              "templateHash": "15388289119319771934"
+              "templateHash": "15815884747026956332"
             }
           },
           "parameters": {
@@ -2546,6 +2406,10 @@
                       {
                         "name": "APP_MSAL_TOKEN_SCOPE",
                         "value": "<BACKEND_API_SCOPE>"
+                      },
+                      {
+                        "name": "APP_ISLOGS_ENABLED",
+                        "value": "false"
                       }
                     ]
                   },
@@ -3269,7 +3133,7 @@
           "location": {
             "value": "[parameters('secondaryLocation')]"
           },
-          "azureContainerRegistry": "[if(equals(parameters('useLocalBuild'), 'true'), createObject('value', reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_registry'), '2022-09-01').outputs.acrEndpoint.value), createObject('value', variables('containerImageEndPoint')))]",
+          "azureContainerRegistry": "[if(equals(variables('useLocalBuildLower'), 'true'), createObject('value', reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_registry'), '2022-09-01').outputs.acrEndpoint.value), createObject('value', variables('containerImageEndPoint')))]",
           "appConfigEndPoint": {
             "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_app_config_service'), '2022-09-01').outputs.appConfigEndpoint.value]"
           },
@@ -3304,7 +3168,7 @@
             "value": "[parameters('maxReplicaContainerWeb')]"
           },
           "useLocalBuild": {
-            "value": "[parameters('useLocalBuild')]"
+            "value": "[variables('useLocalBuildLower')]"
           }
         },
         "template": {
@@ -3314,7 +3178,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.34.44.8038",
-              "templateHash": "15388289119319771934"
+              "templateHash": "15815884747026956332"
             }
           },
           "parameters": {
@@ -4065,6 +3929,10 @@
                       {
                         "name": "APP_MSAL_TOKEN_SCOPE",
                         "value": "<BACKEND_API_SCOPE>"
+                      },
+                      {
+                        "name": "APP_ISLOGS_ENABLED",
+                        "value": "false"
                       }
                     ]
                   },

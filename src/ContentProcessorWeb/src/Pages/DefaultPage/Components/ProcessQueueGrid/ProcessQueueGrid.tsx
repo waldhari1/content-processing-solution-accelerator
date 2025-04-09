@@ -344,13 +344,13 @@ const ProcessQueueGrid: React.FC<GridComponentProps> = () => {
             </div>
 
             <Confirmation
-                title="Delete file"
-                content="This action is permanent. Are you sure you want to delete the file?"
+                title="Delete Confirmation"
+                content="Are you sure you want to delete this file?"
                 isDialogOpen={isDialogOpen}
                 onDialogClose={toggleDialog}
                 footerButtons={[
                     {
-                        text: "Delete file",
+                        text: "Confirm",
                         appearance: "primary",
                         onClick: handleDelete,
                     },

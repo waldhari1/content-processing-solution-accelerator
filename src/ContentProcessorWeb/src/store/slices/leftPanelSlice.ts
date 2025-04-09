@@ -191,7 +191,7 @@ const leftPanelSlice = createSlice({
                 state.deleteFilesLoader = state.deleteFilesLoader.filter(id => id !== processId);
             }
             if(action.payload.status === 'Success')
-                toast.success("Record deleted successfully!")
+                toast.success("File deleted successfully.")
             else 
              toast.error(action.payload.message)
         })
@@ -199,7 +199,7 @@ const leftPanelSlice = createSlice({
             const processId = action.meta.arg.processId;
             if (processId) {
                 state.deleteFilesLoader = state.deleteFilesLoader.filter(id => id !== processId);
-                toast.error("Something went wrong!")
+                toast.error("Failed to delete the file. Please try again.")
             }
         });
     },
