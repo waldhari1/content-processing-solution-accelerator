@@ -6,7 +6,7 @@ on:
       - main
       - dev
       - demo
-      - psl_test
+      - psl-test
   pull_request:
     types:
       - opened
