@@ -14,7 +14,8 @@ interface LeftPanelState {
     processId: string | null;
     selectedItem: any;
     pageSize : number;
-    deleteFilesLoader: string[]
+    deleteFilesLoader: string[],
+    isGridRefresh : boolean;
 }
 
 interface UploadMetadata {
@@ -109,6 +110,7 @@ const initialState: LeftPanelState = {
     gridLoader : false,
     processId: null,
     selectedItem: {},
+    isGridRefresh: false,
     pageSize : 500,
 
     deleteFilesLoader : [],
@@ -125,7 +127,10 @@ const leftPanelSlice = createSlice({
         setSelectedGridRow: (state, action) => {
             state.processId = action.payload.processId;
             state.selectedItem = action.payload.item;
-        }
+        },
+        setRefreshGrid: (state, action) => {
+            state.isGridRefresh = action.payload;
+        },
     },
     extraReducers: (builder) => {
         //Fetch Dropdown values
@@ -205,5 +210,5 @@ const leftPanelSlice = createSlice({
     },
 });
 
-export const { setSchemaSelectedOption, setSelectedGridRow } = leftPanelSlice.actions;
+export const { setSchemaSelectedOption, setSelectedGridRow,setRefreshGrid } = leftPanelSlice.actions;
 export default leftPanelSlice.reducer;
