@@ -22,15 +22,15 @@ jobs:
 
       - name: Login to Azure
         run: |
-          az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+          az login --service-principal -u ${{ secrets.AZURE_MAINTENANCE_CLIENT_ID }} -p ${{ secrets.AZURE_MAINTENANCE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Run Quota Check
         id: quota-check
         run: |
-          export AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
+          export AZURE_MAINTENANCE_CLIENT_ID=${{ secrets.AZURE_MAINTENANCE_CLIENT_ID }}
           export AZURE_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}
-          export AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
-          export AZURE_SUBSCRIPTION_ID="${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          export AZURE_MAINTENANCE_CLIENT_SECRET=${{ secrets.AZURE_MAINTENANCE_CLIENT_SECRET }}
+          export AZURE_MAINTENANCE_SUBSCRIPTION_ID="${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}"
           export GPT_MIN_CAPACITY="100"
           export AZURE_REGIONS="${{ vars.AZURE_REGIONS }}"
 
@@ -155,7 +155,7 @@ jobs:
           echo "Fetching resources in the resource group: ${{ env.RESOURCE_GROUP_NAME }}"
 
           # Ensure correct subscription is set
-          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          az account set --subscription "${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}"
 
           # Fetch all resource IDs dynamically (instead of names)
           resources_to_check=($(az resource list --resource-group ${{ env.RESOURCE_GROUP_NAME }} --query "[].id" -o tsv))
@@ -227,7 +227,7 @@ jobs:
           echo "Using saved list of deleted resources from previous step..."
 
           # Ensure the correct subscription is set
-          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          az account set --subscription "${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}"
 
           # Iterate over each deleted resource
           for resource_name in $RESOURCES_TO_PURGE; do
