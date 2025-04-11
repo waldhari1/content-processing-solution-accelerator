@@ -7,7 +7,7 @@ import SchemaDropdown from './Components/SchemaDropdown/SchemaDropdown';
 import UploadFilesModal from "../../Components/UploadContent/UploadFilesModal.tsx";
 
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { fetchSchemaData, fetchContentTableData, setRefreshGrid } from '../../store/slices/leftPanelSlice.ts';
+import { fetchSchemaData, fetchContentTableData, setRefreshGrid, fetchSwaggerData } from '../../store/slices/leftPanelSlice.ts';
 import { AppDispatch, RootState } from '../../store/index.ts';
 import { startLoader, stopLoader } from "../../store/slices/loaderSlice.ts";
 import { toast } from "react-toastify";
@@ -32,6 +32,7 @@ const PanelLeft: React.FC<PanelLeftProps> = () => {
       try {
         dispatch(startLoader("1"));
         await Promise.allSettled([
+          dispatch(fetchSwaggerData()).unwrap(),
           dispatch(fetchSchemaData()).unwrap(),
           dispatch(fetchContentTableData({ pageSize: store.pageSize, pageNumber: 1 })).unwrap(),
         ]);
