@@ -18,7 +18,7 @@ Check the [Azure Products by Region](https://azure.microsoft.com/en-us/explore/g
 
 Here are some example regions where the services are available: East US, East US2, Australia East, UK South, France Central.
 
-### **Important Note for PowerShell Users**
+### **Important: Note for PowerShell Users**
 
 If you encounter issues running PowerShell scripts due to the policy of not being digitally signed, you can temporarily adjust the `ExecutionPolicy` by running the following command in an elevated PowerShell session:
 
@@ -27,6 +27,14 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 This will allow the scripts to run for the current session without permanently changing your system's policy.
+
+<br>
+
+### **Important: Check Azure OpenAI Quota Availability**
+
+⚠️ To ensure sufficient quota is available in your subscription, please follow [quota check instructions guide](./Quota_Check.md) before you deploy the solution.
+
+<br/>   
 
 ## Deployment Options & Steps
 
@@ -40,7 +48,7 @@ Pick from the options below to see step-by-step instructions for GitHub Codespac
 
 ### GitHub Codespaces
 
-You can run this solution using GitHub Codespaces. The button will open a web-based VS Code instance in your browser:
+You can run this solution using [GitHub Codespaces](https://docs.github.com/en/codespaces). The button will open a web-based VS Code instance in your browser:
 
 1. Open the solution accelerator (this may take several minutes):
 
@@ -57,7 +65,7 @@ You can run this solution using GitHub Codespaces. The button will open a web-ba
 
 ### VS Code Dev Containers
 
-You can run this solution in VS Code Dev Containers, which will open the project in your local VS Code using the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers):
+You can run this solution in [VS Code Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers), which will open the project in your local VS Code using the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers):
 
 1. Start Docker Desktop (install it if not already installed).
 2. Open the project:
