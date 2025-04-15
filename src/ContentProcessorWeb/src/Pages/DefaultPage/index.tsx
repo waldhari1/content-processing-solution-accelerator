@@ -10,14 +10,6 @@ import { updatePanelCollapse } from "../../store/slices/defaultPageSlice.ts";
 
 import { makeStyles, Button } from "@fluentui/react-components";
 
-import {
-  bundleIcon,
-  CalendarMonthFilled,
-  CalendarMonthRegular,
-} from "@fluentui/react-icons";
-
-const CalendarMonth = bundleIcon(CalendarMonthFilled, CalendarMonthRegular);
-
 const Page: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
@@ -40,7 +32,6 @@ const Page: React.FC = () => {
           </Button>
         </div>
         <PanelLeft togglePanel={togglePanel} />
-
       </div>
 
       <div className={`panelCenter ${store.isCenterPanelCollapse ? 'collapse' : 'expand'}`}>
