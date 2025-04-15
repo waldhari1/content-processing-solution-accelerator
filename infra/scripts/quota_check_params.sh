@@ -221,8 +221,7 @@ for REGION in "${REGIONS[@]}"; do
         done
     done
 
-if { [ "$IS_USER_PROVIDED_PAIRS" = true ] && [ "$INSUFFICIENT_QUOTA" = false ] && [ "$FOUND" = true ]; } || \
-   { [ "$APPLY_OR_CONDITION" != true ] || [ "$AT_LEAST_ONE_MODEL_AVAILABLE" = true ]; }; then
+if { [ "$IS_USER_PROVIDED_PAIRS" = true ] && [ "$INSUFFICIENT_QUOTA" = false ] && [ "$FOUND" = true ]; } || { [ "$APPLY_OR_CONDITION" != true ] || [ "$AT_LEAST_ONE_MODEL_AVAILABLE" = true ]; }; then
         VALID_REGIONS+=("$REGION")
         TABLE_ROWS+=("${TEMP_TABLE_ROWS[@]}")
         INDEX=$((INDEX + 1))
