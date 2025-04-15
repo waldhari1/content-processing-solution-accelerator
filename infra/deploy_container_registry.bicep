@@ -13,7 +13,7 @@ var containerNameCleaned = replace('cr${solutionName }', '-', '')
 param location string = resourceGroup().location
 
 @description('Provide a tier of your Azure Container Registry.')
-param acrSku string = 'Premium'
+param acrSku string = 'Basic'
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-09-01' = {
   name: containerNameCleaned
