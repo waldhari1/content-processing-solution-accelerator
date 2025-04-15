@@ -15,6 +15,14 @@ import "./UploadFilesModal.styles.scss";
 
 import { CheckmarkCircle16Filled, DismissCircle16Filled } from "@fluentui/react-icons";
 
+import {
+  MessageBar,
+  MessageBarTitle,
+  MessageBarBody,
+  MessageBarIntent,
+  Link,
+} from "@fluentui/react-components";
+
 const useStyles = makeStyles({
   container: {
     margin: "10px 0px",
@@ -27,6 +35,15 @@ const useStyles = makeStyles({
   DismissCircle: {
     color: 'red'
   }
+});
+
+const useClasses = makeStyles({
+  messageContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    marginBottom: "10px"
+  },
 });
 
 
@@ -48,6 +65,7 @@ interface FileErrors {
 const UploadFilesModal: React.FC<UploadFilesModalProps> = ({ open, onClose }) => {
 
   const styles = useStyles();
+  const classes = useClasses();
 
   const [files, setFiles] = useState<File[]>([]);
   const [startUpload, setStartUpload] = useState(false);
@@ -61,6 +79,7 @@ const UploadFilesModal: React.FC<UploadFilesModalProps> = ({ open, onClose }) =>
   const [uploadCompleted, setUploadCompleted] = useState(false);
 
 
+  const intents: MessageBarIntent[] = ["warning"];
   const store = useSelector((state: RootState) => ({
     schemaSelectedOption: state.leftPanel.schemaSelectedOption,
     page_size: state.leftPanel.gridData.page_size,
@@ -202,6 +221,16 @@ const UploadFilesModal: React.FC<UploadFilesModalProps> = ({ open, onClose }) =>
         <DialogTitle>Import Content</DialogTitle>
         <DialogContent>
           <div className="dialogBody">
+            <div className={classes.messageContainer}>
+              {intents.map((intent) => (
+                <MessageBar key={intent} intent={intent}>
+                  <MessageBarBody>
+                    <MessageBarTitle>Selected Schema  : {store.schemaSelectedOption.optionText} </MessageBarTitle>
+                    <br />Please upload files specific to "{store.schemaSelectedOption.optionText}"
+                  </MessageBarBody>
+                </MessageBar>
+              ))}
+            </div>
             {/* Drag & Drop Area with Centered Button & Message */}
             <div
               className={`drop-area ${dragging ? "dragging" : ""}`}
