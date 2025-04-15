@@ -32,7 +32,7 @@ This will allow the scripts to run for the current session without permanently c
 
 ### **Important: Check Azure OpenAI Quota Availability**
 
-⚠️ To ensure sufficient quota is available in your subscription, please follow [quota check instructions guide](./Quota_Check.md) before you deploy the solution.
+⚠️ To ensure sufficient quota is available in your subscription, please follow [quota check instructions guide](./docs/Quota_Check.md) before you deploy the solution.
 
 <br/>   
 
