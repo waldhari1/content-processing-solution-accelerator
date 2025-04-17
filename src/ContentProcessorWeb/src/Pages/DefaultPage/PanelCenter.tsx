@@ -167,11 +167,13 @@ const PanelCenter: React.FC<PanelCenterProps> = ({ togglePanel }) => {
     try {
       dispatch(startLoader("1"));
       dispatch(setUpdateComments(comment))
-      await dispatch(saveContentJson({ 'processId': store.activeProcessId, 'contentJson': store.modified_result.extracted_result, 'comments': comment, 'savedComments': store.comments }))
+      const result = await dispatch(saveContentJson({ 'processId': store.activeProcessId, 'contentJson': store.modified_result.extracted_result, 'comments': comment, 'savedComments': store.comments }))
+      if (result?.type === 'SaveContentJSON-Comments/fulfilled') {
+        dispatch(setRefreshGrid(true));
+      }
     } catch (error) {
       console.error('API Error:', error);
     } finally {
-      dispatch(setRefreshGrid(true));
       dispatch(stopLoader("1"));
     }
   }
