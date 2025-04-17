@@ -150,6 +150,12 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
     azd auth login --tenant-id <tenant-id>
     ```
 
+    > **Note:** To retrieve the Tenant ID required for local deployment, you can go to **Tenant Properties** in [Azure Portal](https://portal.azure.com/) from the resource list. Alternatively, follow these steps:
+    >
+    > 1. Open the [Azure Portal](https://portal.azure.com/).
+    > 2. Navigate to **Azure Active Directory** from the left-hand menu.
+    > 3. Under the **Overview** section, locate the **Tenant ID** field. Copy the value displayed.
+
 2. Provision and deploy all the resources:
 
     ```shell
