@@ -76,7 +76,7 @@ jobs:
           echo "Generating a unique resource group name..."
           TIMESTAMP=$(date +%Y%m%d%H%M)
           # Define the common part and add a "cps-" prefix
-          COMMON_PART="pslautomation"
+          COMMON_PART="automation"
           UNIQUE_RG_NAME="cps-${COMMON_PART}${TIMESTAMP}"
           echo "RESOURCE_GROUP_NAME=${UNIQUE_RG_NAME}" >> $GITHUB_ENV
           echo "Generated Resource_GROUP_PREFIX: ${UNIQUE_RG_NAME}"
@@ -89,26 +89,29 @@ jobs:
           rg_exists=$(az group exists --name ${{ env.RESOURCE_GROUP_NAME }})
           if [ "$rg_exists" = "false" ]; then
             echo "Resource group does not exist. Creating..."
+
+            # Generate current timestamp in desired format: YYYY-MM-DDTHH:MM:SS.SSSSSSSZ
+            current_date=$(date -u +"%Y-%m-%dT%H:%M:%S.%7NZ")
             az group create --name ${{ env.RESOURCE_GROUP_NAME }} \
                             --location ${{ env.AZURE_LOCATION }} \
                             --tags "CreatedBy=Deployment Lifecycle Automation Pipeline" \
                                    "Purpose=Deploying and Cleaning Up Resources for Validation" \
+                                   "CreatedDate=$current_date" \
                                    "ApplicationName=Content Processing Accelerator" \
             || { echo "Error creating resource group"; exit 1; }
           else
             echo "Resource group already exists."
           fi
 
-      - name: Generate Unique Solution Prefix
-        id: generate_solution_prefix
+      - name: Generate Environment Name
+        id: generate_environment_name
         run: |
           set -e
-          COMMON_PART="pslr"
-          TIMESTAMP=$(date +%s)  
-          UPDATED_TIMESTAMP=$(echo $TIMESTAMP | tail -c 3) 
-          UNIQUE_SOLUTION_PREFIX="${COMMON_PART}${UPDATED_TIMESTAMP}"
-          echo "SOLUTION_PREFIX=${UNIQUE_SOLUTION_PREFIX}" >> $GITHUB_ENV
-          echo "Generated SOLUTION_PREFIX: ${UNIQUE_SOLUTION_PREFIX}"
+          TIMESTAMP_SHORT=$(date +%s | tail -c 5)    # Last 4-5 digits of epoch seconds
+          RANDOM_SUFFIX=$(head /dev/urandom | tr -dc 'a-z0-9' | head -c 8)  # 8 random alphanum chars
+          UNIQUE_ENV_NAME="${TIMESTAMP_SHORT}${RANDOM_SUFFIX}"    # Usually ~12-13 chars
+          echo "ENVIRONMENT_NAME=${UNIQUE_ENV_NAME}" >> $GITHUB_ENV
+          echo "Generated ENVIRONMENT_NAME: ${UNIQUE_ENV_NAME}"
 
       - name: Deploy Bicep Template
         id: deploy
@@ -118,7 +121,7 @@ jobs:
             --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
             --template-file infra/main.json \
             --parameters \
-                environmentName="${{ env.SOLUTION_PREFIX }}" \
+                environmentName="${{ env.ENVIRONMENT_NAME }}" \
                 secondaryLocation="EastUs2" \
                 contentUnderstandingLocation="WestUS" \
                 deploymentType="GlobalStandard" \
@@ -134,7 +137,7 @@ jobs:
                 useLocalBuild="false"
 
       - name: Delete Bicep Deployment
-        if: success()
+        if: always()  # This ensures that resource group deletion happens regardless of success or failure
         run: |
           set -e  
           echo "Checking if resource group exists..."
@@ -151,6 +154,7 @@ jobs:
           fi
 
       - name: Wait for Resource Deletion to Complete
+        if: always()
         run: |
           echo "Fetching resources in the resource group: ${{ env.RESOURCE_GROUP_NAME }}"
 
@@ -220,7 +224,7 @@ jobs:
           done
 
       - name: Purging the Resources
-        if: success()
+        if: always()
         run: |
           set -e
 
