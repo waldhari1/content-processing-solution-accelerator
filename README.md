@@ -11,7 +11,7 @@ User story
 
 This solution accelerator enables customers to programmatically extract data and apply schemas to unstructured documents across text-based and multi-modal content. During processing, extraction and data schema transformation - these steps are scored for accuracy to automate processing and identify as-needed human validation. This allows for improved accuracy and greater speed for data integration into downstream systems.
 
-It leverages Azure AI Foundry, Azure AI Content Understanding, Azure OpenAI Service, Azure blob storage, and Cosmos DB to transform large volumes of unstructured content through event-driven processing pipelines for integration into downstream applications and post-processing activities.
+It leverages Azure AI Foundry, Azure AI Content Understanding, Azure OpenAI Service, Azure blob storage, and Azure Cosmos DB to transform large volumes of unstructured content through event-driven processing pipelines for integration into downstream applications and post-processing activities.
 
 
 ### Technical key features
