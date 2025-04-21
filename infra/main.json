@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.34.44.8038",
-      "templateHash": "17985360808056860425"
+      "templateHash": "2631796362162534903"
     }
   },
   "parameters": {
@@ -67,6 +67,9 @@
     "gptModelVersion": {
       "type": "string",
       "defaultValue": "2024-08-06",
+      "allowedValues": [
+        "2024-08-06"
+      ],
       "minLength": 1,
       "metadata": {
         "description": "Version of the GPT model to deploy:"
@@ -480,7 +483,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.34.44.8038",
-              "templateHash": "7568462549649877267"
+              "templateHash": "17770758516688495068"
             }
           },
           "parameters": {
@@ -526,7 +529,6 @@
                 "enabledForDiskEncryption": true,
                 "enabledForTemplateDeployment": true,
                 "enableRbacAuthorization": true,
-                "enablePurgeProtection": true,
                 "publicNetworkAccess": "enabled",
                 "sku": {
                   "family": "A",
@@ -672,7 +674,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.34.44.8038",
-              "templateHash": "10286514074548439078"
+              "templateHash": "18372681746235366113"
             }
           },
           "parameters": {
@@ -688,7 +690,7 @@
             },
             "acrSku": {
               "type": "string",
-              "defaultValue": "Premium",
+              "defaultValue": "Basic",
               "metadata": {
                 "description": "Provide a tier of your Azure Container Registry."
               }
@@ -709,25 +711,6 @@
                 "name": "[parameters('acrSku')]"
               },
               "properties": {
-                "adminUserEnabled": true,
-                "dataEndpointEnabled": false,
-                "networkRuleBypassOptions": "AzureServices",
-                "networkRuleSet": {
-                  "defaultAction": "Allow"
-                },
-                "policies": {
-                  "quarantinePolicy": {
-                    "status": "disabled"
-                  },
-                  "retentionPolicy": {
-                    "status": "enabled",
-                    "days": 7
-                  },
-                  "trustPolicy": {
-                    "status": "disabled",
-                    "type": "Notary"
-                  }
-                },
                 "publicNetworkAccess": "Enabled",
                 "zoneRedundancy": "Disabled"
               }
@@ -1655,7 +1638,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.34.44.8038",
-              "templateHash": "15815884747026956332"
+              "templateHash": "1111747132207169107"
             }
           },
           "parameters": {
@@ -3178,7 +3161,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.34.44.8038",
-              "templateHash": "15815884747026956332"
+              "templateHash": "1111747132207169107"
             }
           },
           "parameters": {
