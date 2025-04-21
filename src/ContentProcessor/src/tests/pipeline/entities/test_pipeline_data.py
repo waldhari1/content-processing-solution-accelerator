@@ -2,7 +2,6 @@ import pytest
 from unittest.mock import Mock
 from libs.pipeline.entities.pipeline_step_result import StepResult
 from libs.pipeline.entities.pipeline_status import PipelineStatus
-from libs.azure_helper.storage_blob import StorageBlobHelper
 
 
 def test_update_step():

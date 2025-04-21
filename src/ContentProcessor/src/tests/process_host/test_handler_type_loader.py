@@ -1,5 +1,4 @@
 import pytest
-from importlib import import_module
 from libs.pipeline.queue_handler_base import HandlerBase
 from libs.process_host.handler_type_loader import load
 

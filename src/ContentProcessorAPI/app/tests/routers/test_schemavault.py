@@ -3,7 +3,6 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
 from app.routers.schemavault import router, get_schemas
-from app.routers.models.schmavault.model import SchemaVaultUnregisterRequest
 
 
 app = FastAPI()

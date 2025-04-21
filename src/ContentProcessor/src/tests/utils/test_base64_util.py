@@ -1,4 +1,3 @@
-import pytest
 import base64
 from libs.utils.base64_util import is_base64_encoded
 
