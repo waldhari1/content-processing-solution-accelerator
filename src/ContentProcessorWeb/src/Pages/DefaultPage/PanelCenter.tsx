@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "../../Styles/App.css";
 import { makeStyles, SelectTabData, SelectTabEvent, Tab, TabList, TabValue, Textarea, Divider, Button } from "@fluentui/react-components";
-import { Field } from "@fluentui/react-components";
+import { Field,tokens } from "@fluentui/react-components";
 import PanelToolbar from "../../Hooks/usePanelHooks.tsx";
 import JSONEditor from "../../Components/JSONEditor/JSONEditor"
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
@@ -14,7 +14,6 @@ import { setRefreshGrid } from "../../store/slices/leftPanelSlice.ts";
 
 import { bundleIcon, ChevronDoubleLeft20Filled, ChevronDoubleLeft20Regular } from "@fluentui/react-icons";
 const ChevronDoubleLeft = bundleIcon(ChevronDoubleLeft20Regular, ChevronDoubleLeft20Filled);
-
 interface PanelCenterProps {
   togglePanel: (panel: string) => void;
 }
@@ -41,7 +40,7 @@ const useStyles = makeStyles({
   panelCenterBottomSeciton: {
     padding: '10px 16px',
     boxSizing: 'border-box',
-    background: '#FAFAFA',
+    background: tokens.colorNeutralBackground2,
     position: 'relative'
   },
   panelLabel: {
@@ -62,13 +61,13 @@ const useStyles = makeStyles({
     height: 'calc(100vh - 200px)',
     border: '1px solid #DBDBDB',
     overflow: 'auto',
-    background: '#f6f6f6',
+    background: tokens.colorNeutralBackground3,
     padding: '5px',
     boxSizing: 'border-box'
   },
   fieldLabel: {
     fontWeight: 'bold',
-    color: '#424242',
+    color: tokens.colorNeutralForeground2,
   },
   textAreaClass: {
     minHeight: '90px',

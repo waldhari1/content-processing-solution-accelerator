@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { Accordion, AccordionItem, AccordionHeader, AccordionPanel } from "@fluentui/react-components";
+import { Accordion, AccordionItem, AccordionHeader, AccordionPanel, tokens } from "@fluentui/react-components";
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { RootState, AppDispatch } from '../../../../store/index.ts';
 import { JsonEditor } from "json-edit-react";
@@ -70,7 +70,7 @@ const ProcessSteps = () => {
       {!status.includes(store.selectedItem.status) && store.processStepsData?.map((step, index) => (
         <AccordionItem key={index} value={step.step_name}>
           <AccordionHeader onClick={() => handleExpand(index)}> {loadingStates[index] && <Spinner size="tiny" style={{ position: 'absolute', left: '10px' }} label="" />}
-            <span style={{ fontWeight: 'bold', textTransform: 'capitalize' }}>{step.step_name}</span>
+            <span style={{ fontWeight: 'bold', textTransform: 'capitalize'}}>{step.step_name}</span>
             <span style={{ color: 'green', marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
               {renderProcessTimeInSeconds(step.processed_time)} <CheckmarkCircleFilled style={{ marginLeft: '4px' }} />
             </span>
