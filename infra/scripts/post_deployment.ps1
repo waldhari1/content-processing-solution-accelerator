@@ -40,10 +40,10 @@ Write-Host "  ✅ Name: $CONTAINER_API_APP_NAME"
 Write-Host "  🌐 Endpoint: https://$CONTAINER_API_APP_FQDN"
 Write-Host "  🔗 Portal URL: $API_APP_PORTAL_URL"
 
-Write-Host ""
-Write-Host "📦 Follow Next steps to import Schemas:"
-Write-Host "👉 Run the following commands in your terminal:"
-$CurrentPath = Get-Location
-Write-Host ""
-Write-Host "   cd $FullPath"
-Write-Host "   ./register_schema.ps1 https://$CONTAINER_API_APP_FQDN/schemavault/ schema_info_ps1.json"
+# Write-Host ""
+# Write-Host "📦 Follow Next steps to import Schemas:"
+# Write-Host "👉 Run the following commands in your terminal:"
+# $CurrentPath = Get-Location
+# Write-Host ""
+# Write-Host "   cd $FullPath"
+# Write-Host "   ./register_schema.ps1 https://$CONTAINER_API_APP_FQDN/schemavault/ schema_info_ps1.json"
