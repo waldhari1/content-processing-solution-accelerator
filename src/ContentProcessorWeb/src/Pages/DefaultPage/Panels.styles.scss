@@ -5,15 +5,14 @@
 /* Panel container styling */
 
 .panelLeftLayout {
-  /* background-color: var(--colorNeutralBackground4); */
   position: relative;
   display: flex;
   height: 100%;
   box-sizing: border-box;
   flex-direction: column;
   overflow-y: auto;
-  background-color: white;
-  border: 1px solid #D6D6D6;
+  background-color: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralBackground3Pressed);
   border-width: 1px 1px 0px 0px;
   flex: 37%;
   min-width: 300px;
@@ -30,8 +29,8 @@
     box-sizing: border-box;
     flex-direction: column;
     overflow-y: auto;
-    background-color: white;
-    border: 1px solid #D6D6D6;
+    background-color: var(--colorNeutralBackground1);
+    border: 1px solid var(--colorNeutralBackground3Pressed);
     border-width: 1px 1px 0px 0px;
   }
 
@@ -86,8 +85,8 @@
 
   flex: 31%;
   min-width: 280px;
-  background: white;
-  border: 2px solid #d6d6d6;
+  background: var(--colorNeutralBackground1);
+  border: 2px solid var(--colorNeutralBackground3Pressed);
   border-width: 2px 2px 0 0;
 
   .custom-test button {
@@ -102,7 +101,7 @@
 
     .msgp {
       margin: auto;
-      color: red;
+      color: var(--colorPaletteRedBackground3);
     }
   }
 
@@ -115,7 +114,7 @@
   flex: none;
   width: auto;
   min-width: 20px;
-  border: 1px solid #d6d6d6;
+  border: 1px solid var(--colorNeutralBackground3Pressed);
   border-width: 1px 1px 0 0;
 
   .collapseButtonDiv {
@@ -129,21 +128,21 @@
 
 
 .panelRight {
-  /* background-color: var(--colorNeutralBackground4); */
+   background-color: var(--colorNeutralBackground4);
   position: relative;
   display: flex;
   height: 100%;
   box-sizing: border-box;
   flex-direction: column;
   overflow-y: auto;
-  background-color: white;
-  border: 1px solid #D6D6D6;
+  background-color: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralBackground3Pressed);
   border-width: 1px 0px 0px 0px;
 
   flex: 31%;
   min-width: 280px;
-  background: white;
-  border: 1px solid #d6d6d6;
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralBackground3Pressed);
   border-width: 1px 1px 0 0;
 
   .panelRightContent {
@@ -213,7 +212,6 @@
   /* Automatically adjusts height */
   width: fit-content;
   /* Adjust width based on content */
-  background-color: #f0f0f0;
   cursor: pointer;
   min-width: 10px !important;
 
