@@ -36,7 +36,6 @@ jobs:
           pip install uv
           cd src/ContentProcessor
           uv sync
-          echo "source .venv/bin/activate" >> $GITHUB_ENV
           pip install pytest-cov
           pip install pytest-asyncio
 
