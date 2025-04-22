@@ -38,6 +38,7 @@ jobs:
           uv sync
           pip install pytest-cov
           pip install pytest-asyncio
+          pip install certifi
 
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=$PWD" >> $GITHUB_ENV
