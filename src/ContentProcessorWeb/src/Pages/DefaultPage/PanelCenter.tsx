@@ -53,7 +53,7 @@ const useStyles = makeStyles({
     border: '1px solid #DBDBDB',
     overflow: 'auto',
     background: '#f6f6f6',
-    padding: '10px 5px',
+    padding: '5px 5px',
     boxSizing: 'border-box'
   },
 
@@ -166,7 +166,7 @@ const PanelCenter: React.FC<PanelCenterProps> = ({ togglePanel }) => {
     try {
       dispatch(startLoader("1"));
       dispatch(setUpdateComments(comment))
-      const result = await dispatch(saveContentJson({ 'processId': store.activeProcessId, 'contentJson': store.modified_result.extracted_result, 'comments': comment, 'savedComments': store.comments }))
+      const result = await dispatch(saveContentJson({ 'processId': store.activeProcessId, 'contentJson': store.modified_result, 'comments': comment, 'savedComments': store.comments }))
       if (result?.type === 'SaveContentJSON-Comments/fulfilled') {
         dispatch(setRefreshGrid(true));
       }
@@ -178,6 +178,7 @@ const PanelCenter: React.FC<PanelCenterProps> = ({ togglePanel }) => {
   }
 
   const IsButtonSaveDisalbedCheck = () => {
+    if(!store.activeProcessId) return true;
     if (status.includes(store.selectedItem.status)) return true;
     if (Object.keys(store.modified_result).length > 0) return false;
     if (comment.trim() !== store.comments && comment.trim() !== '') return false;

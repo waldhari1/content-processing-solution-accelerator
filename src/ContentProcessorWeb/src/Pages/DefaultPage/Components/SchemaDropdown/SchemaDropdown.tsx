@@ -44,7 +44,8 @@ const ComboboxComponent = (props: Partial<ComboboxProps>) => {
   }, [store.schemaData]);
 
   const handleChange: (typeof props)["onOptionSelect"] = (ev, data) => {
-    dispatch(setSchemaSelectedOption(data));
+    const selectedItem = data.optionValue !=undefined ? data : {}
+    dispatch(setSchemaSelectedOption(selectedItem));
   };
 
   return (

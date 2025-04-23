@@ -134,6 +134,7 @@ const ProcessQueueGrid: React.FC<GridComponentProps> = () => {
                 setItems(items);
             } else {
                 setItems([])
+                dispatch(setSelectedGridRow({ processId: '', item: {}}));
             }
         }
 
@@ -327,6 +328,7 @@ const ProcessQueueGrid: React.FC<GridComponentProps> = () => {
                     </TableHeader>
                     <TableBody className="gridTableBody">
                         <div className="GridList">
+                            {rows.length > 0? 
                             <AutoSizer>
                                 {({ height, width }) => (
                                     <List
@@ -339,7 +341,9 @@ const ProcessQueueGrid: React.FC<GridComponentProps> = () => {
                                         {RenderRow}
                                     </List>
                                 )}
-                            </AutoSizer>
+                            </AutoSizer> : 
+                            <p style={{ textAlign: 'center' }}>No data available</p>
+                            }
                         </div>
                     </TableBody>
                 </Table>
