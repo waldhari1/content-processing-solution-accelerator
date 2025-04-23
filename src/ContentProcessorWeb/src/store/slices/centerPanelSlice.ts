@@ -149,7 +149,7 @@ const centerPanelSlice = createSlice({
             .addCase(fetchContentJsonData.rejected, (state, action: any) => {
                 state.cError = action.error.message || 'An error occurred';
                 state.cLoader = false;
-                state.contentData = [];
+                state.contentData = {};
                 state.comments = "";
                 toast.error(getDisplayMessage(action.payload))
             });
