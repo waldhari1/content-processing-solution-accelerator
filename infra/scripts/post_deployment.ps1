@@ -31,13 +31,13 @@ $FullPath = Resolve-Path $DataScriptPath
 Write-Host ""
 Write-Host "🧭 Web App Details:"
 Write-Host "  ✅ Name: $CONTAINER_WEB_APP_NAME"
-Write-Host "  🌐 Endpoint: https://$CONTAINER_WEB_APP_FQDN"
+Write-Host "  🌐 Endpoint: $CONTAINER_WEB_APP_FQDN"
 Write-Host "  🔗 Portal URL: $WEB_APP_PORTAL_URL"
 
 Write-Host ""
 Write-Host "🧭 API App Details:"
 Write-Host "  ✅ Name: $CONTAINER_API_APP_NAME"
-Write-Host "  🌐 Endpoint: https://$CONTAINER_API_APP_FQDN"
+Write-Host "  🌐 Endpoint: $CONTAINER_API_APP_FQDN"
 Write-Host "  🔗 Portal URL: $API_APP_PORTAL_URL"
 
 # Write-Host ""
