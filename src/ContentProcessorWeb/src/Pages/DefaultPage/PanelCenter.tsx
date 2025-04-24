@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "../../Styles/App.css";
 import { makeStyles, SelectTabData, SelectTabEvent, Tab, TabList, TabValue, Textarea, Divider, Button } from "@fluentui/react-components";
-import { Field } from "@fluentui/react-components";
+import { Field,tokens } from "@fluentui/react-components";
 import PanelToolbar from "../../Hooks/usePanelHooks.tsx";
 import JSONEditor from "../../Components/JSONEditor/JSONEditor"
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
@@ -14,7 +14,6 @@ import { setRefreshGrid } from "../../store/slices/leftPanelSlice.ts";
 
 import { bundleIcon, ChevronDoubleLeft20Filled, ChevronDoubleLeft20Regular } from "@fluentui/react-icons";
 const ChevronDoubleLeft = bundleIcon(ChevronDoubleLeft20Regular, ChevronDoubleLeft20Filled);
-
 interface PanelCenterProps {
   togglePanel: (panel: string) => void;
 }
@@ -41,7 +40,7 @@ const useStyles = makeStyles({
   panelCenterBottomSeciton: {
     padding: '10px 16px',
     boxSizing: 'border-box',
-    background: '#FAFAFA',
+    background: tokens.colorNeutralBackground2,
     position: 'relative'
   },
   panelLabel: {
@@ -54,7 +53,7 @@ const useStyles = makeStyles({
     border: '1px solid #DBDBDB',
     overflow: 'auto',
     background: '#f6f6f6',
-    padding: '10px 5px',
+    padding: '5px 5px',
     boxSizing: 'border-box'
   },
 
@@ -62,13 +61,13 @@ const useStyles = makeStyles({
     height: 'calc(100vh - 200px)',
     border: '1px solid #DBDBDB',
     overflow: 'auto',
-    background: '#f6f6f6',
+    background: tokens.colorNeutralBackground3,
     padding: '5px',
     boxSizing: 'border-box'
   },
   fieldLabel: {
     fontWeight: 'bold',
-    color: '#424242',
+    color: tokens.colorNeutralForeground2,
   },
   textAreaClass: {
     minHeight: '90px',
@@ -167,7 +166,7 @@ const PanelCenter: React.FC<PanelCenterProps> = ({ togglePanel }) => {
     try {
       dispatch(startLoader("1"));
       dispatch(setUpdateComments(comment))
-      const result = await dispatch(saveContentJson({ 'processId': store.activeProcessId, 'contentJson': store.modified_result.extracted_result, 'comments': comment, 'savedComments': store.comments }))
+      const result = await dispatch(saveContentJson({ 'processId': store.activeProcessId, 'contentJson': store.modified_result, 'comments': comment, 'savedComments': store.comments }))
       if (result?.type === 'SaveContentJSON-Comments/fulfilled') {
         dispatch(setRefreshGrid(true));
       }
@@ -179,6 +178,7 @@ const PanelCenter: React.FC<PanelCenterProps> = ({ togglePanel }) => {
   }
 
   const IsButtonSaveDisalbedCheck = () => {
+    if(!store.activeProcessId) return true;
     if (status.includes(store.selectedItem.status)) return true;
     if (Object.keys(store.modified_result).length > 0) return false;
     if (comment.trim() !== store.comments && comment.trim() !== '') return false;
