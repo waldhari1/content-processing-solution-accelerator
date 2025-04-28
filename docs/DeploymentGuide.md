@@ -209,7 +209,7 @@ This will rebuild the source code, package it into a container, and push it to t
     - **Get API Service's Endpoint**
         - Get API Service Endpoint Url from your container app for API  
           Name is **ca-**<< your environmentName >>-**api**  
-          ![Check API Service Url](Images/CheckAPIService.png)  
+          ![Check API Service Url](./images/CheckAPIService.png)  
 
         - Copy the URL  
     - **Execute Script to registering Schemas**
@@ -228,7 +228,7 @@ This will rebuild the source code, package it into a container, and push it to t
           ```  
 
     - **Verify Results**
-        ![schema file registration](./Images/SchemaFileRegistration.png)  
+        ![schema file registration](./images/SchemaFileRegistration.png)  
 
 2. **Import Sample Data**  
     - Grab the Schema IDs for Invoice and Property Damage Claim Form's Schema from first step
