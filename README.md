@@ -91,7 +91,7 @@ Check the [Azure Products by Region](https://azure.microsoft.com/en-us/explore/g
 
 Pricing varies per region and usage, so it isn't possible to predict exact costs for your usage. The majority of the Azure resources used in this infrastructure are on usage-based pricing tiers. However, Azure Container Registry has a fixed cost per registry per day.
 
-Use the [Azure pricing calculator](https://azure.microsoft.com/en-us/pricing/calculator) to calculate the cost of this solution in your subscription. [Review a sample pricing sheet for the achitecture](https://azure.com/e/68b51f4cb79a4466b631a11aa57e9c16).
+Use the [Azure pricing calculator](https://azure.microsoft.com/en-us/pricing/calculator) to calculate the cost of this solution in your subscription. [Review a sample pricing sheet for the achitecture](https://azure.com/e/0a9a1459d1a2440ca3fd274ed5b53397).
 
 
 <br/>
