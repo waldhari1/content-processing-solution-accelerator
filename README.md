@@ -16,7 +16,7 @@ These capabilities can be applied to numerous use cases including: contract proc
 Solution overview
 </h2>
 
-This accelerator leverages Azure AI Foundry, Azure AI Content Understanding, Azure OpenAI Service, Azure blob storage, and Cosmos DB to transform large volumes of unstructured content through event-driven processing pipelines for integration into downstream applications and post-processing activities. Processing, extraction and data schema transformation steps are scored for accuracy to automate processing and identify as-needed human validation.
+This accelerator leverages Azure AI Foundry, Azure AI Content Understanding Service, Azure OpenAI Service, Azure blob storage, Azure Cosmos DB, and Azure Container Apps to transform large volumes of unstructured content through event-driven processing pipelines for integration into downstream applications and post-processing activities. Processing, extraction and data schema transformation steps are scored for accuracy to automate processing and identify as-needed human validation.
 
 ### Solution architecture
 |![image](./docs/images/readme/solution-architecture.png)|
