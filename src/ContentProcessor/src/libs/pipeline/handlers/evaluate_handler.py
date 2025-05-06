@@ -56,7 +56,7 @@ class EvaluateHandler(HandlerBase):
         )
 
         # Mapped Result by GPT
-        parsed_message_from_gpt = gpt_result.choices[0].message.parsed
+        parsed_message_from_gpt = json.loads(gpt_result.choices[0].message.content)
 
         # Convert the parsed message to a dictionary
         gpt_evaluate_confidence_dict = parsed_message_from_gpt
