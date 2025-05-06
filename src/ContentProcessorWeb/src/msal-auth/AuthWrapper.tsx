@@ -10,7 +10,7 @@ import useAuth from './useAuth';
 const AuthWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const { isAuthenticated, login, inProgress,token } = useAuth();
-  const authEnabled = process.env.REACT_APP_AUTH_ENABLED !== 'false'; // Defaults to true if not set
+  const authEnabled = process.env.REACT_APP_AUTH_ENABLED?.toLowerCase() !== 'false'; // Defaults to true if not set
 
   useEffect(() => {
     if (authEnabled && !isAuthenticated && inProgress === InteractionStatus.None) {
