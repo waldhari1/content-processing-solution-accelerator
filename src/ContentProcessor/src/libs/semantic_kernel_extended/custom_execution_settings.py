@@ -1,5 +1,3 @@
-from typing import Any
-
 from semantic_kernel.connectors.ai.open_ai import AzureChatPromptExecutionSettings
 
 

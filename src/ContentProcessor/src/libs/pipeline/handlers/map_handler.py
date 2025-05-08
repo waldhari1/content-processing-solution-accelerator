@@ -134,9 +134,9 @@ class MapHandler(HandlerBase):
         # Define the prompt template
         prompt = """
         system : You are an AI assistant that extracts data from documents.
-        
+
         {{$history}}
-        
+
         assistant :"""
 
         # Set Execution Settings - logprobs property doesn't spported in ExecutionSettings

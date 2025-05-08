@@ -1,8 +1,9 @@
 from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 from openai import AzureOpenAI
 
-## It will be deprecated in the future
-## Open AI SDK -> Semaantic Kernel
+
+# It will be deprecated in the future
+# Open AI SDK -> Semaantic Kernel
 def get_openai_client(azure_openai_endpoint: str) -> AzureOpenAI:
     credential = DefaultAzureCredential()
     token_provider = get_bearer_token_provider(
