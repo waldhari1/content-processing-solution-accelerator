@@ -38,7 +38,7 @@ jobs:
       - name: Get registry
         id: registry
         run: |
-          echo "ext_registry=${{ secrets.ACR_LOGIN_SERVER || 'acrlogin.azurecr.io'}}" >> $GITHUB_OUTPUT
+          echo "ext_registry=${{ env.ACR_LOGIN_SERVER || 'acrlogin.azurecr.io'}}" >> $GITHUB_OUTPUT
         
       - name: Set Docker image tags
         id: tag
