@@ -36,7 +36,6 @@ class AppMainBase(ABC, AppModelBase):
         # Set App Context object
         self.application_context = AppContext()
         self.application_context.set_configuration(AppConfiguration())
-        self.application_context.set_kernel()
 
         if self.application_context.configuration.app_logging_enable:
             # Read Configuration for Logging Level as a Text then retrive the logging level
