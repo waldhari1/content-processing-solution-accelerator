@@ -2,8 +2,18 @@ targetScope = 'resourceGroup'
 
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
+param existingLogAnalyticsWorkspaceId string = ''
 
-resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
+var useExisting = !empty(existingLogAnalyticsWorkspaceId)
+var existingLawResourceGroup = useExisting ? split(existingLogAnalyticsWorkspaceId, '/')[4] : ''
+var existingLawName = useExisting ? split(existingLogAnalyticsWorkspaceId, '/')[8] : ''
+
+resource existingLogAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08-01' existing = if (useExisting) {
+  name: existingLawName
+  scope: resourceGroup(existingLawResourceGroup)
+}
+
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = if (!useExisting) {
   name: logAnalyticsWorkspaceName
   location: resourceGroup().location
   properties: any({
@@ -32,9 +42,10 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
     publicNetworkAccessForIngestion: 'Enabled'
     publicNetworkAccessForQuery: 'Disabled'
     Request_Source: 'rest'
-    WorkspaceResourceId: logAnalyticsWorkspace.id
+    WorkspaceResourceId: useExisting ? existingLogAnalyticsWorkspace.id : logAnalyticsWorkspace.id
   }
 }
 
 output id string = applicationInsights.id
-output logAnalyticsWorkspaceName string = logAnalyticsWorkspace.name
+output logAnalyticsWorkspaceName string = useExisting ? existingLogAnalyticsWorkspace.name : logAnalyticsWorkspace.name
+output logAnalyticsWorkspaceResourceGroup string = useExisting ? existingLawResourceGroup : resourceGroup().name
