@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "708671422034288821"
+      "templateHash": "12841296004328754819"
     }
   },
   "parameters": {
@@ -120,6 +120,13 @@
       "defaultValue": "false",
       "metadata": {
         "description": "Set this flag to true only if you are deplpoying from Local"
+      }
+    },
+    "existingLogAnalyticsWorkspaceId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional: Existing Log Analytics Workspace Resource ID"
       }
     }
   },
@@ -565,6 +572,9 @@
         },
         "mode": "Incremental",
         "parameters": {
+          "existingLogAnalyticsWorkspaceId": {
+            "value": "[parameters('existingLogAnalyticsWorkspaceId')]"
+          },
           "applicationInsightsName": {
             "value": "[format('{0}{1}', variables('abbrs').managementGovernance.applicationInsights, variables('solutionPrefix'))]"
           },
@@ -579,7 +589,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "16868995909099501999"
+              "templateHash": "4417744862326794406"
             }
           },
           "parameters": {
@@ -588,10 +598,20 @@
             },
             "logAnalyticsWorkspaceName": {
               "type": "string"
+            },
+            "existingLogAnalyticsWorkspaceId": {
+              "type": "string",
+              "defaultValue": ""
             }
+          },
+          "variables": {
+            "useExisting": "[not(empty(parameters('existingLogAnalyticsWorkspaceId')))]",
+            "existingLawResourceGroup": "[if(variables('useExisting'), split(parameters('existingLogAnalyticsWorkspaceId'), '/')[4], '')]",
+            "existingLawName": "[if(variables('useExisting'), split(parameters('existingLogAnalyticsWorkspaceId'), '/')[8], '')]"
           },
           "resources": [
             {
+              "condition": "[not(variables('useExisting'))]",
               "type": "Microsoft.OperationalInsights/workspaces",
               "apiVersion": "2023-09-01",
               "name": "[parameters('logAnalyticsWorkspaceName')]",
@@ -623,7 +643,7 @@
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Disabled",
                 "Request_Source": "rest",
-                "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName'))]"
+                "WorkspaceResourceId": "[if(variables('useExisting'), extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('existingLawResourceGroup')), 'Microsoft.OperationalInsights/workspaces', variables('existingLawName')), resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName')))]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName'))]"
@@ -637,7 +657,11 @@
             },
             "logAnalyticsWorkspaceName": {
               "type": "string",
-              "value": "[parameters('logAnalyticsWorkspaceName')]"
+              "value": "[if(variables('useExisting'), variables('existingLawName'), parameters('logAnalyticsWorkspaceName'))]"
+            },
+            "logAnalyticsWorkspaceResourceGroup": {
+              "type": "string",
+              "value": "[if(variables('useExisting'), variables('existingLawResourceGroup'), resourceGroup().name)]"
             }
           }
         }
@@ -1460,6 +1484,9 @@
           },
           "logAnalyticsWorkspaceName": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_app_insights'), '2022-09-01').outputs.logAnalyticsWorkspaceName.value]"
+          },
+          "logAnalyticsWorkspaceResourceGroup": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_app_insights'), '2022-09-01').outputs.logAnalyticsWorkspaceResourceGroup.value]"
           }
         },
         "template": {
@@ -1468,6 +1495,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
+              "version": "0.35.1.17967",
+              "templateHash": "12849612969576340024"
               "version": "0.35.1.17967",
               "templateHash": "1901255801577127677"
             }
@@ -1483,6 +1512,9 @@
               "type": "string"
             },
             "logAnalyticsWorkspaceName": {
+              "type": "string"
+            },
+            "logAnalyticsWorkspaceResourceGroup": {
               "type": "string"
             }
           },
@@ -1506,8 +1538,8 @@
                 "appLogsConfiguration": {
                   "destination": "log-analytics",
                   "logAnalyticsConfiguration": {
-                    "customerId": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName')), '2023-09-01').customerId]",
-                    "sharedKey": "[listKeys(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName')), '2023-09-01').primarySharedKey]"
+                    "customerId": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('logAnalyticsWorkspaceResourceGroup')), 'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName')), '2023-09-01').customerId]",
+                    "sharedKey": "[listKeys(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('logAnalyticsWorkspaceResourceGroup')), 'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName')), '2023-09-01').primarySharedKey]"
                   }
                 },
                 "zoneRedundant": false,
