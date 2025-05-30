@@ -30,20 +30,10 @@ param contentUnderstandingLocation string
 ])
 param deploymentType string = 'GlobalStandard'
 
-@minLength(1)
 @description('Name of the GPT model to deploy:')
-@allowed([
-  'gpt-4o-mini'
-  'gpt-4o'
-  'gpt-4'
-])
 param gptModelName string = 'gpt-4o'
 
-@minLength(1)
 @description('Version of the GPT model to deploy:')
-@allowed([
-  '2024-08-06'
-])
 param gptModelVersion string = '2024-08-06'
 
 //var gptModelVersion = '2024-02-15-preview'
