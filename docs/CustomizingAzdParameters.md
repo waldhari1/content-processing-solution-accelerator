@@ -35,3 +35,8 @@ Change if the deployment should use a local build of the containers
 ```shell
 azd env set USE_LOCAL_BUILD 'false'
 ```
+
+Set the Log Analytics Workspace Id if you need to reuse the existing workspace which is already existing
+```shell
+azd env set AZURE_ENV_LOG_ANALYTICS_WORKSPACE_ID '<Existing Log Analytics Workspace Id>'
+```

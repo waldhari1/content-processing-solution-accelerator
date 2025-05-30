@@ -75,6 +75,9 @@ param maxReplicaContainerWeb int = 1
 @description('Set this flag to true only if you are deplpoying from Local')
 param useLocalBuild string = 'false'
 
+@description('Optional: Existing Log Analytics Workspace Resource ID')
+param existingLogAnalyticsWorkspaceId string = ''
+
 var containerImageEndPoint = 'cpscontainerreg.azurecr.io'
 var resourceGroupLocation = resourceGroup().location
 
@@ -110,6 +113,7 @@ module kvault 'deploy_keyvault.bicep' = {
 module applicationInsights 'deploy_app_insights.bicep' = {
   name: 'deploy_app_insights'
   params: {
+    existingLogAnalyticsWorkspaceId: existingLogAnalyticsWorkspaceId
     applicationInsightsName: '${abbrs.managementGovernance.applicationInsights}${solutionPrefix}'
     logAnalyticsWorkspaceName: '${abbrs.managementGovernance.logAnalyticsWorkspace}${solutionPrefix}'
   }
@@ -159,6 +163,7 @@ module containerAppEnv './container_app/deploy_container_app_env.bicep' = {
     containerEnvName: '${abbrs.containers.containerAppsEnvironment}${solutionPrefix}'
     location: secondaryLocation
     logAnalyticsWorkspaceName: applicationInsights.outputs.logAnalyticsWorkspaceName
+    logAnalyticsWorkspaceResourceGroup: applicationInsights.outputs.logAnalyticsWorkspaceResourceGroup
   }
 }
 
