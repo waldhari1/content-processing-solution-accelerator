@@ -109,7 +109,7 @@ Consider the following settings during your deployment to modify specific settin
 <details>
   <summary><b>Configurable Deployment Settings</b></summary>
 
-When you start the deployment, most parameters will have **default values**, but you can update the following settings:
+When you start the deployment, most parameters will have **default values**, but you can update the following settings by following the steps [here](../docs/CustomizingAzdParameters.md):
 
 | **Setting** | **Description** | **Default value** |
 |-------------|-----------------|-------------------|
