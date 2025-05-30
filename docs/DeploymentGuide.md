@@ -119,6 +119,7 @@ When you start the deployment, most parameters will have **default values**, but
 | **Deployment Type** | Select from a drop-down list. | GlobalStandard |
 | **GPT Model** | Choose from **gpt-4o**. | gpt-4o |
 | **GPT Model Deployment Capacity** | Configure capacity for **GPT models**. | 30k |
+| **Existing Log analytics workspace** | To reuse the existing Log analytics workspace Id. |  |
 
 </details>
 
