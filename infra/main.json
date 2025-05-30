@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.33.93.31351",
-      "templateHash": "4256862050395001092"
+      "version": "0.35.1.17967",
+      "templateHash": "12841296004328754819"
     }
   },
   "parameters": {
@@ -130,6 +130,13 @@
       "defaultValue": "false",
       "metadata": {
         "description": "Set this flag to true only if you are deplpoying from Local"
+      }
+    },
+    "existingLogAnalyticsWorkspaceId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional: Existing Log Analytics Workspace Resource ID"
       }
     }
   },
@@ -396,8 +403,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.33.93.31351",
-              "templateHash": "16134592121024826026"
+              "version": "0.35.1.17967",
+              "templateHash": "3237931210750164965"
             }
           },
           "parameters": {
@@ -482,8 +489,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.33.93.31351",
-              "templateHash": "15557228969906150296"
+              "version": "0.35.1.17967",
+              "templateHash": "1503106947863889964"
             }
           },
           "parameters": {
@@ -575,6 +582,9 @@
         },
         "mode": "Incremental",
         "parameters": {
+          "existingLogAnalyticsWorkspaceId": {
+            "value": "[parameters('existingLogAnalyticsWorkspaceId')]"
+          },
           "applicationInsightsName": {
             "value": "[format('{0}{1}', variables('abbrs').managementGovernance.applicationInsights, variables('solutionPrefix'))]"
           },
@@ -588,8 +598,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.33.93.31351",
-              "templateHash": "3187674908414646820"
+              "version": "0.35.1.17967",
+              "templateHash": "4417744862326794406"
             }
           },
           "parameters": {
@@ -598,10 +608,20 @@
             },
             "logAnalyticsWorkspaceName": {
               "type": "string"
+            },
+            "existingLogAnalyticsWorkspaceId": {
+              "type": "string",
+              "defaultValue": ""
             }
+          },
+          "variables": {
+            "useExisting": "[not(empty(parameters('existingLogAnalyticsWorkspaceId')))]",
+            "existingLawResourceGroup": "[if(variables('useExisting'), split(parameters('existingLogAnalyticsWorkspaceId'), '/')[4], '')]",
+            "existingLawName": "[if(variables('useExisting'), split(parameters('existingLogAnalyticsWorkspaceId'), '/')[8], '')]"
           },
           "resources": [
             {
+              "condition": "[not(variables('useExisting'))]",
               "type": "Microsoft.OperationalInsights/workspaces",
               "apiVersion": "2023-09-01",
               "name": "[parameters('logAnalyticsWorkspaceName')]",
@@ -633,7 +653,7 @@
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Disabled",
                 "Request_Source": "rest",
-                "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName'))]"
+                "WorkspaceResourceId": "[if(variables('useExisting'), extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('existingLawResourceGroup')), 'Microsoft.OperationalInsights/workspaces', variables('existingLawName')), resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName')))]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName'))]"
@@ -647,7 +667,11 @@
             },
             "logAnalyticsWorkspaceName": {
               "type": "string",
-              "value": "[parameters('logAnalyticsWorkspaceName')]"
+              "value": "[if(variables('useExisting'), variables('existingLawName'), parameters('logAnalyticsWorkspaceName'))]"
+            },
+            "logAnalyticsWorkspaceResourceGroup": {
+              "type": "string",
+              "value": "[if(variables('useExisting'), variables('existingLawResourceGroup'), resourceGroup().name)]"
             }
           }
         }
@@ -673,8 +697,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.33.93.31351",
-              "templateHash": "1849454370000745085"
+              "version": "0.35.1.17967",
+              "templateHash": "12870101648257851199"
             }
           },
           "parameters": {
@@ -759,8 +783,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.33.93.31351",
-              "templateHash": "10635563035313821837"
+              "version": "0.35.1.17967",
+              "templateHash": "8070899038568610427"
             }
           },
           "parameters": {
@@ -917,8 +941,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.33.93.31351",
-              "templateHash": "2351732847831798088"
+              "version": "0.35.1.17967",
+              "templateHash": "13810365425953827110"
             }
           },
           "parameters": {
@@ -1470,6 +1494,9 @@
           },
           "logAnalyticsWorkspaceName": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_app_insights'), '2022-09-01').outputs.logAnalyticsWorkspaceName.value]"
+          },
+          "logAnalyticsWorkspaceResourceGroup": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_app_insights'), '2022-09-01').outputs.logAnalyticsWorkspaceResourceGroup.value]"
           }
         },
         "template": {
@@ -1478,8 +1505,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.33.93.31351",
-              "templateHash": "6312132419145754805"
+              "version": "0.35.1.17967",
+              "templateHash": "12849612969576340024"
             }
           },
           "parameters": {
@@ -1493,6 +1520,9 @@
               "type": "string"
             },
             "logAnalyticsWorkspaceName": {
+              "type": "string"
+            },
+            "logAnalyticsWorkspaceResourceGroup": {
               "type": "string"
             }
           },
@@ -1516,8 +1546,8 @@
                 "appLogsConfiguration": {
                   "destination": "log-analytics",
                   "logAnalyticsConfiguration": {
-                    "customerId": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName')), '2023-09-01').customerId]",
-                    "sharedKey": "[listKeys(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName')), '2023-09-01').primarySharedKey]"
+                    "customerId": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('logAnalyticsWorkspaceResourceGroup')), 'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName')), '2023-09-01').customerId]",
+                    "sharedKey": "[listKeys(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('logAnalyticsWorkspaceResourceGroup')), 'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName')), '2023-09-01').primarySharedKey]"
                   }
                 },
                 "zoneRedundant": false,
@@ -1613,8 +1643,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.33.93.31351",
-              "templateHash": "7993212940398363690"
+              "version": "0.35.1.17967",
+              "templateHash": "6288181929674095968"
             }
           },
           "parameters": {
@@ -2016,8 +2046,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.33.93.31351",
-                      "templateHash": "3161097028384591794"
+                      "version": "0.35.1.17967",
+                      "templateHash": "17874244636612129409"
                     }
                   },
                   "parameters": {
@@ -2196,8 +2226,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.33.93.31351",
-                      "templateHash": "3161097028384591794"
+                      "version": "0.35.1.17967",
+                      "templateHash": "17874244636612129409"
                     }
                   },
                   "parameters": {
@@ -2388,8 +2418,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.33.93.31351",
-                      "templateHash": "3161097028384591794"
+                      "version": "0.35.1.17967",
+                      "templateHash": "17874244636612129409"
                     }
                   },
                   "parameters": {
@@ -2572,8 +2602,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.33.93.31351",
-              "templateHash": "10151972800818695845"
+              "version": "0.35.1.17967",
+              "templateHash": "18013369407849007542"
             }
           },
           "parameters": {
@@ -2680,8 +2710,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.33.93.31351",
-              "templateHash": "8996673787140878183"
+              "version": "0.35.1.17967",
+              "templateHash": "12698338841871546352"
             }
           },
           "parameters": {
@@ -2925,8 +2955,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.33.93.31351",
-              "templateHash": "2202804532336229531"
+              "version": "0.35.1.17967",
+              "templateHash": "6748924733076412812"
             }
           },
           "parameters": {
@@ -3136,8 +3166,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.33.93.31351",
-              "templateHash": "7993212940398363690"
+              "version": "0.35.1.17967",
+              "templateHash": "6288181929674095968"
             }
           },
           "parameters": {
@@ -3539,8 +3569,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.33.93.31351",
-                      "templateHash": "3161097028384591794"
+                      "version": "0.35.1.17967",
+                      "templateHash": "17874244636612129409"
                     }
                   },
                   "parameters": {
@@ -3719,8 +3749,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.33.93.31351",
-                      "templateHash": "3161097028384591794"
+                      "version": "0.35.1.17967",
+                      "templateHash": "17874244636612129409"
                     }
                   },
                   "parameters": {
@@ -3911,8 +3941,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.33.93.31351",
-                      "templateHash": "3161097028384591794"
+                      "version": "0.35.1.17967",
+                      "templateHash": "17874244636612129409"
                     }
                   },
                   "parameters": {
