@@ -13,15 +13,11 @@ on:
   workflow_dispatch:
 
 env:
-    # url: ${{ vars.CP_WEB_URL }}
-    url: https://ca-cps-7kptilcf2uq4-web.politefield-0ff1aa7e.francecentral.azurecontainerapps.io
+    url: ${{ vars.CP_WEB_URL }}
     accelerator_name: "Content Processing"
 
 jobs:
   test:
-    permissions:
-      id-token: write
-      contents: read
 
     runs-on: ubuntu-latest
     steps:      
@@ -44,12 +40,9 @@ jobs:
         with:
           azcliversion: 'latest'
           inlineScript: |
-            # az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.CP_RG }}/providers/Microsoft.App/containerApps/${{ vars.CP_CONTAINERAPP_PREFIX }}-app/start?api-version=2025-01-01"
-            # az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.CP_RG }}/providers/Microsoft.App/containerApps/${{ vars.CP_CONTAINERAPP_PREFIX }}-api/start?api-version=2025-01-01"
-            # az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.CP_RG }}/providers/Microsoft.App/containerApps/${{ vars.CP_CONTAINERAPP_PREFIX }}-web/start?api-version=2025-01-01"
-            az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/rg-cps-gp-testautomation/providers/Microsoft.App/containerApps/ca-cps-7kptilcf2uq4-app/start?api-version=2025-01-01"
-            az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/rg-cps-gp-testautomation/providers/Microsoft.App/containerApps/ca-cps-7kptilcf2uq4-api/start?api-version=2025-01-01"
-            az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/rg-cps-gp-testautomation/providers/Microsoft.App/containerApps/ca-cps-7kptilcf2uq4-web/start?api-version=2025-01-01"
+            az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.CP_RG }}/providers/Microsoft.App/containerApps/${{ vars.CP_CONTAINERAPP_PREFIX }}-app/start?api-version=2025-01-01"
+            az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.CP_RG }}/providers/Microsoft.App/containerApps/${{ vars.CP_CONTAINERAPP_PREFIX }}-api/start?api-version=2025-01-01"
+            az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.CP_RG }}/providers/Microsoft.App/containerApps/${{ vars.CP_CONTAINERAPP_PREFIX }}-web/start?api-version=2025-01-01"
 
       - name: Install dependencies
         run: |
@@ -135,10 +128,7 @@ jobs:
         with:
           azcliversion: 'latest'
           inlineScript: |
-            # az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.CP_RG }}/providers/Microsoft.App/containerApps/${{ vars.CP_CONTAINERAPP_PREFIX }}-app/stop?api-version=2025-01-01"
-            # az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.CP_RG }}/providers/Microsoft.App/containerApps/${{ vars.CP_CONTAINERAPP_PREFIX }}-api/stop?api-version=2025-01-01"
-            # az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.CP_RG }}/providers/Microsoft.App/containerApps/${{ vars.CP_CONTAINERAPP_PREFIX }}-web/stop?api-version=2025-01-01"
-            az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/rg-cps-gp-testautomation/providers/Microsoft.App/containerApps/ca-cps-7kptilcf2uq4-app/stop?api-version=2025-01-01"
-            az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/rg-cps-gp-testautomation/providers/Microsoft.App/containerApps/ca-cps-7kptilcf2uq4-api/stop?api-version=2025-01-01"
-            az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/rg-cps-gp-testautomation/providers/Microsoft.App/containerApps/ca-cps-7kptilcf2uq4-web/stop?api-version=2025-01-01"
+            az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.CP_RG }}/providers/Microsoft.App/containerApps/${{ vars.CP_CONTAINERAPP_PREFIX }}-app/stop?api-version=2025-01-01"
+            az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.CP_RG }}/providers/Microsoft.App/containerApps/${{ vars.CP_CONTAINERAPP_PREFIX }}-api/stop?api-version=2025-01-01"
+            az rest -m post -u "/subscriptions/${{ secrets.AZURE_MAINTENANCE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.CP_RG }}/providers/Microsoft.App/containerApps/${{ vars.CP_CONTAINERAPP_PREFIX }}-web/stop?api-version=2025-01-01"
             az logout
