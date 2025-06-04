@@ -36,6 +36,10 @@ This will allow the scripts to run for the current session without permanently c
 
 <br/>   
 
+### **Configurable Deployment Settings**  
+
+When you start the deployment, most parameters will have **default values**, but you can update the following settings by following the steps [here](../docs/CustomizingAzdParameters.md): 
+
 ## Deployment Options & Steps
 
 Pick from the options below to see step-by-step instructions for GitHub Codespaces, VS Code Dev Containers, and Local Environments.
