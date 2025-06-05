@@ -68,6 +68,8 @@ param useLocalBuild string = 'false'
 @description('Optional: Existing Log Analytics Workspace Resource ID')
 param existingLogAnalyticsWorkspaceId string = ''
 
+param imageTag string = 'vishal'
+
 var containerImageEndPoint = 'cpscontainerreg.azurecr.io'
 var resourceGroupLocation = resourceGroup().location
 
@@ -175,6 +177,7 @@ module containerApps './container_app/deploy_container_app_api_web.bicep' = {
     minReplicaContainerWeb: minReplicaContainerWeb
     maxReplicaContainerWeb: maxReplicaContainerWeb
     useLocalBuild: 'false'
+    imageTag: imageTag
   }
 }
 
@@ -243,6 +246,7 @@ module updateContainerApp './container_app/deploy_container_app_api_web.bicep' =
     minReplicaContainerWeb: minReplicaContainerWeb
     maxReplicaContainerWeb: maxReplicaContainerWeb
     useLocalBuild: useLocalBuildLower
+    imageTag: imageTag
   }
   dependsOn: [roleAssignments]
 }
