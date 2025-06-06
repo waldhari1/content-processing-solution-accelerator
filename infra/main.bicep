@@ -154,6 +154,7 @@ module containerAppEnv './container_app/deploy_container_app_env.bicep' = {
     location: secondaryLocation
     logAnalyticsWorkspaceName: applicationInsights.outputs.logAnalyticsWorkspaceName
     logAnalyticsWorkspaceResourceGroup: applicationInsights.outputs.logAnalyticsWorkspaceResourceGroup
+    logAnalyticsWorkspaceSubscription: applicationInsights.outputs.logAnalyticsWorkspaceSubscription
   }
 }
 
