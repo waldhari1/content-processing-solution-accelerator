@@ -4,7 +4,7 @@ param (
     [string]$ENV_NAME,
     [string]$AZURE_LOCATION,
     [string]$AZURE_RESOURCE_GROUP,
-    [string]$USE_LOCAL_BUILD
+    [string]$USE_LOCAL_BUILD,
     [string]$AZURE_ENV_IMAGETAG
 )
 
