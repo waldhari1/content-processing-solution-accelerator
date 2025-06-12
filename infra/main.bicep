@@ -135,15 +135,11 @@ module aifoundry 'deploy_ai_foundry.bicep' = {
   params: {
     solutionName: solutionPrefix
     solutionLocation: resourceGroupLocation
-    keyVaultName: kvault.outputs.keyvaultName
     cuLocation: contentUnderstandingLocation
     deploymentType: deploymentType
     gptModelName: gptModelName
     gptModelVersion: gptModelVersion
     gptDeploymentCapacity: gptDeploymentCapacity
-    managedIdentityObjectId: managedIdentityModule.outputs.managedIdentityOutput.objectId
-    containerRegistryId: containerRegistry.outputs.createdAcrId
-    applicationInsightsId: applicationInsights.outputs.id
   }
   scope: resourceGroup(resourceGroup().name)
 }
