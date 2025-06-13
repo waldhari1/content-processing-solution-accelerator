@@ -24,6 +24,8 @@ AZURE_ENV_IMAGETAG=$6
 
 USE_LOCAL_BUILD=$(echo "$USE_LOCAL_BUILD" | grep -iq "^true$" && echo "true" || echo "false")
 
+AZURE_ENV_IMAGETAG=${AZURE_ENV_IMAGETAG:-latest}
+
 if [ "$USE_LOCAL_BUILD" = "true" ]; then
     echo "Local Build enabled. Starting build process."
     az account set --subscription "$AZURE_SUBSCRIPTION_ID"
