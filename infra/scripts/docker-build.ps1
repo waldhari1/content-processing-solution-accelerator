@@ -11,6 +11,10 @@ param (
 # Convert USE_LOCAL_BUILD to Boolean
 $USE_LOCAL_BUILD = if ($USE_LOCAL_BUILD -match "^(?i:true)$") { $true } else { $false }
 
+if ([string]::IsNullOrEmpty($AZURE_ENV_IMAGETAG)) {
+    $AZURE_ENV_IMAGETAG = "latest"
+}
+
 # Validate required parameters
 if (-not $AZURE_SUBSCRIPTION_ID -or -not $ENV_NAME -or -not $AZURE_LOCATION -or -not $AZURE_RESOURCE_GROUP) {
     Write-Error "Missing required arguments. Usage: docker-build.ps1 <AZURE_SUBSCRIPTION_ID> <ENV_NAME> <AZURE_LOCATION> <AZURE_RESOURCE_GROUP> <USE_LOCAL_BUILD> <AZURE_ENV_IMAGETAG>"
