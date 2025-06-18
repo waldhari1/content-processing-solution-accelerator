@@ -66,7 +66,7 @@ def test_content_processing_steps(login_logout, description, action, request):
         request.node._report_sections.append(
             ("call", "log", f"Step passed: {description} (Duration: {duration:.2f} seconds)")
         )
-    except Exception as e:
+    except Exception:
         duration = time.time() - start_time
         logger.error(f"Step failed: {description} (Duration: {duration:.2f} seconds)")
         raise
