@@ -1,37 +1,52 @@
-import os
-import atexit
+"""
+Pytest configuration for browser-based testing with Playwright and HTML report customization.
+"""
+
 import io
-from bs4 import BeautifulSoup
-import pytest
+import atexit
 import logging
-from config.constants import URL
+from pathlib import Path
+from venv import logger
+
+import pytest
+from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
+
+from config.constants import URL
+
+# Global dictionary to store log streams for each test
+LOG_STREAMS = {}
 
 
 @pytest.fixture(scope="session")
 def login_logout():
-    # perform login and browser close once in a session
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, args=["--start-maximized"])
+    """
+    Fixture to launch the browser, log in, and yield the page object.
+    Closes the browser after the session ends.
+    """
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch(headless=False, args=["--start-maximized"])
         context = browser.new_context(no_viewport=True)
         context.set_default_timeout(80000)
         page = context.new_page()
-        # Navigate to the login URL
+
         page.goto(URL, wait_until="domcontentloaded")
-        # login to web url with username and password
+
+        # Uncomment and complete the following to enable login
         # login_page = LoginPage(page)
         # load_dotenv()
-        # login_page.authenticate(os.getenv('user_name'), os.getenv('pass_word'))
+        # login_page.authenticate(os.getenv("user_name"), os.getenv("pass_word"))
 
         yield page
-        # perform close the browser
+
         browser.close()
 
-log_streams = {}
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_runtest_setup(item):
-    # Prepare StringIO for capturing logs
+    """
+    Pytest hook to set up a log capture for each test.
+    """
     stream = io.StringIO()
     handler = logging.StreamHandler(stream)
     handler.setLevel(logging.INFO)
@@ -39,62 +54,68 @@ def pytest_runtest_setup(item):
     logger = logging.getLogger()
     logger.addHandler(handler)
 
-    # Save handler and stream
-    log_streams[item.nodeid] = (handler, stream)
+    LOG_STREAMS[item.nodeid] = (handler, stream)
 
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
+    """
+    Pytest hook to add captured logs to the test report.
+    """
     outcome = yield
     report = outcome.get_result()
 
-    handler, stream = log_streams.get(item.nodeid, (None, None))
+    handler, stream = LOG_STREAMS.get(item.nodeid, (None, None))
 
     if handler and stream:
-        # Make sure logs are flushed
         handler.flush()
         log_output = stream.getvalue()
 
-        # Only remove the handler, don't close the stream yet
         logger = logging.getLogger()
         logger.removeHandler(handler)
 
-        # Store the log output on the report object for HTML reporting
         report.description = f"<pre>{log_output.strip()}</pre>"
 
-        # Clean up references
-        log_streams.pop(item.nodeid, None)
+        LOG_STREAMS.pop(item.nodeid, None)
     else:
         report.description = ""
 
+
 def pytest_collection_modifyitems(items):
+    """
+    Modify test node IDs based on the test's parameterized 'prompt' value.
+    """
     for item in items:
-        if hasattr(item, 'callspec'):
+        if hasattr(item, "callspec"):
             prompt = item.callspec.params.get("prompt")
             if prompt:
-                item._nodeid = prompt  # This controls how the test name appears in the report
+                item._nodeid = prompt
+
 
 def rename_duration_column():
-    report_path = os.path.abspath("report.html")  # or your report filename
-    if not os.path.exists(report_path):
-        print("Report file not found, skipping column rename.")
+    """
+    Modify the HTML report to rename 'Duration' column to 'Execution Time'.
+    Runs automatically after the test session.
+    """
+    report_path = Path("report.html")
+    if not report_path.exists():
+        logger.info("Report file not found, skipping column rename.")
         return
 
-    with open(report_path, 'r', encoding='utf-8') as f:
-        soup = BeautifulSoup(f, 'html.parser')
+    with report_path.open("r", encoding="utf-8") as file:
+        soup = BeautifulSoup(file, "html.parser")
 
-    # Find and rename the header
-    headers = soup.select('table#results-table thead th')
+    headers = soup.select("table#results-table thead th")
     for th in headers:
-        if th.text.strip() == 'Duration':
-            th.string = 'Execution Time'
-            #print("Renamed 'Duration' to 'Execution Time'")
+        if th.text.strip() == "Duration":
+            th.string = "Execution Time"
             break
     else:
         print("'Duration' column not found in report.")
 
-    with open(report_path, 'w', encoding='utf-8') as f:
-        f.write(str(soup))
+    with report_path.open("w", encoding="utf-8") as file:
+        file.write(str(soup))
 
-# Register this function to run after everything is done
+
+# Register HTML report column modification
 atexit.register(rename_duration_column)
