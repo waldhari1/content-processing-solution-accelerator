@@ -2,7 +2,6 @@
 Pytest configuration for browser-based testing with Playwright and HTML report customization.
 """
 
-import os
 import io
 import atexit
 import logging

@@ -52,14 +52,12 @@ def test_content_processing_steps(login_logout, description, action, request):
     Executes Golden Path content processing steps with individual log entries.
     """
     request.node._nodeid = description
-    
     page = login_logout
     home = HomePage(page)
 
     logger.info(f"Running test step: {description}")
 
     start_time = time.time()
- 
     try:
         action(home)
         duration = time.time() - start_time
@@ -71,6 +69,5 @@ def test_content_processing_steps(login_logout, description, action, request):
         duration = time.time() - start_time
         logger.error("Step failed: %s (Duration: %.2f seconds)", description, duration, exc_info=True)
         raise
-
-   
+    
     request.node._report_sections.append(("call", "log", f"Step passed: {description}"))
