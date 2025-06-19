@@ -7,6 +7,7 @@ import io
 import atexit
 import logging
 from pathlib import Path
+from venv import logger
 
 import pytest
 from bs4 import BeautifulSoup
@@ -99,7 +100,7 @@ def rename_duration_column():
     """
     report_path = Path("report.html")
     if not report_path.exists():
-        print("Report file not found, skipping column rename.")
+        logger.info("Report file not found, skipping column rename.")
         return
 
     with report_path.open("r", encoding="utf-8") as file:
