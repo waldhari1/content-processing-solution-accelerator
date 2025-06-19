@@ -69,5 +69,4 @@ def test_content_processing_steps(login_logout, description, action, request):
         duration = time.time() - start_time
         logger.error("Step failed: %s (Duration: %.2f seconds)", description, duration, exc_info=True)
         raise
-    
     request.node._report_sections.append(("call", "log", f"Step passed: {description}"))
