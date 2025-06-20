@@ -183,11 +183,13 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
     - Locate the Web Container App (App Service for the frontend)
 
         - You can find the **Web Application URL** in the **Overview** section. For reference, please see the screenshot below.
+        
         ![](./images/cp-web-container-app.png) 
           
     - Locate the API Container App (App Service for the backend)
 
       - You can find the **API Application URL** in the **Overview** section.For reference, please see the screenshot below.
+        
         ![](./images/cp-api-container-app.png) 
 
 
