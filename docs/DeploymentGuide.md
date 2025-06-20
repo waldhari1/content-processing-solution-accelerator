@@ -191,8 +191,8 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
 
       - You can find the **API Application URL** in the **Overview** section.
 
-        &nbsp;
-    > ##### Important Note : Before accessing the application, ensure that all **[Post Deployment Steps](#post-deployment-steps)** are fully completed, as they are critical for the proper configuration of **Data Ingestion** and **Authentication** functionalities.
+        
+    > #### Important Note : Before accessing the application, ensure that all **[Post Deployment Steps](#post-deployment-steps)** are fully completed, as they are critical for the proper configuration of **Data Ingestion** and **Authentication** functionalities.
 
 6. If you are done trying out the application, you can delete the resources by running `azd down`.
 
