@@ -173,8 +173,11 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
     - This deployment will take *4-6 minutes* to provision the resources in your account and set up the solution with sample data.
     - If you encounter an error or timeout during deployment, changing the location may help, as there could be availability constraints for the resources.
 
+5. Once the deployment has completed successfully: 
 
-5. Once the deployment has completed successfully:
+    > Please refer to the screenshot below as a reference for the successful deployment, which also displays the names of the **Web and API Container Apps** for your convenience.
+
+    ![](./images/cp-post-deployment.png)
 
     - open the [Azure Portal](https://portal.azure.com/)
 
@@ -182,16 +185,12 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
 
     - Locate the Web Container App (App Service for the frontend)
 
-        - You can find the **Web Application URL** in the **Overview** section. For reference, please see the screenshot below.
-        
-        ![](./images/cp-web-container-app.png) 
-          
+        - You can find the **Web Application URL** in the **Overview** section. 
+
     - Locate the API Container App (App Service for the backend)
 
-      - You can find the **API Application URL** in the **Overview** section.For reference, please see the screenshot below.
-        
-       ![](./images/cp-api-container-app.png) 
-
+      - You can find the **API Application URL** in the **Overview** section
+      
 
  > Note: Before accessing the application, ensure that all **[Post Deployment Steps](#post-deployment-steps)** are fully completed, as they are critical for the proper configuration of **Data Ingestion** and **Authentication** functionalities.
 
