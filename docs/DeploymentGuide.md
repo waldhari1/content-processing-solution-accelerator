@@ -175,7 +175,7 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
 
 5. Once the deployment has completed successfully: 
 
-    > Please refer to the screenshot below as a reference for the successful deployment, which also displays the names & end points(Application URL) of the **Web and API Container Apps** for your convenience.
+    > Please refer to the screenshot below as a reference for the successful deployment, which also displays the names and endpoints(Application URL) of the **Web and API Container Apps** for your convenience.
 
     ![](./images/cp-post-deployment.png)
 
@@ -186,13 +186,14 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
     - Locate the Web Container App (App Service for the frontend)
 
         - You can find the **Web Application URL** in the **Overview** section. 
-
+        
     - Locate the API Container App (App Service for the backend)
 
-      - You can find the **API Application URL** in the **Overview** section
-      
+      - You can find the **API Application URL** in the **Overview** section.
 
- > Note: Before accessing the application, ensure that all **[Post Deployment Steps](#post-deployment-steps)** are fully completed, as they are critical for the proper configuration of **Data Ingestion** and **Authentication** functionalities.
+        &nbsp;
+
+    > ###### Important Note : Before accessing the application, ensure that all **[Post Deployment Steps](#post-deployment-steps)** are fully completed, as they are critical for the proper configuration of **Data Ingestion** and **Authentication** functionalities.
 
 6. If you are done trying out the application, you can delete the resources by running `azd down`.
 
