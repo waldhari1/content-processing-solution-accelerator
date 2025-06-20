@@ -190,7 +190,7 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
 
       - You can find the **API Application URL** in the **Overview** section.For reference, please see the screenshot below.
         
-        ![](./images/cp-api-container-app.png) 
+       ![](./images/cp-api-container-app.png) 
 
 
  > Note: Before accessing the application, ensure that all **[Post Deployment Steps](#post-deployment-steps)** are fully completed, as they are critical for the proper configuration of **Data Ingestion** and **Authentication** functionalities.
