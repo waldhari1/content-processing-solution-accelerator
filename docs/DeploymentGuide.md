@@ -179,7 +179,7 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
 
     ![](./images/cp-post-deployment.png)
 
-    - open the [Azure Portal](https://portal.azure.com/)
+    - Open the [Azure Portal](https://portal.azure.com/)
 
     - Navigate to the deployed Resource Group
 
