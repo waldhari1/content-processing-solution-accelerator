@@ -175,7 +175,7 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
 
 5. Once the deployment has completed successfully: 
 
-    > Please refer to the screenshot below as a reference for the successful deployment, which also displays the names of the **Web and API Container Apps** for your convenience.
+    > Please refer to the screenshot below as a reference for the successful deployment, which also displays the names & end points(Application URL) of the **Web and API Container Apps** for your convenience.
 
     ![](./images/cp-post-deployment.png)
 
