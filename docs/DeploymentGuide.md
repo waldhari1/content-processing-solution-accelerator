@@ -173,9 +173,16 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
     - This deployment will take *4-6 minutes* to provision the resources in your account and set up the solution with sample data.
     - If you encounter an error or timeout during deployment, changing the location may help, as there could be availability constraints for the resources.
 
-5. Once the deployment has completed successfully, open the [Azure Portal](https://portal.azure.com/), go to the deployed resource group, find the App Service, and get the app URL from `Default domain`.
+5. Once the deployment has completed successfully:
+    > Please check the terminal or console output for details of the successful deployment. It will display the Name, Endpoint (Application URL), and Azure Portal URL for both the Web and API Azure Container Apps.
 
-6. If you are done trying out the application, you can delete the resources by running `azd down`.
+    ![](./images/cp-post-deployment.png)
+
+    - You can find the Azure portal link in the screenshot above. Click on it to navigate to the corresponding resource group in the Azure portal.
+
+    > #### Important Note : Before accessing the application, ensure that all **[Post Deployment Steps](#post-deployment-steps)** are fully completed, as they are critical for the proper configuration of **Data Ingestion** and **Authentication** functionalities.
+
+7. If you are done trying out the application, you can delete the resources by running `azd down`.
 
 ### Publishing Local Build Container to Azure Container Registry
 
