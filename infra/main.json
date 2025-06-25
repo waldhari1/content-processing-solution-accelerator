@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.36.1.42791",
-      "templateHash": "7133413659987113184"
+      "templateHash": "4455095207947106270"
     }
   },
   "parameters": {
@@ -26,6 +26,7 @@
     },
     "contentUnderstandingLocation": {
       "type": "string",
+      "defaultValue": "WestUS",
       "allowedValues": [
         "WestUS",
         "SwedenCentral",
@@ -38,6 +39,17 @@
         "description": "Location for the Azure AI Content Understanding service deployment:"
       },
       "minLength": 1
+    },
+    "aiDeploymentsLocation": {
+      "type": "string",
+      "metadata": {
+        "azd": {
+          "type": "location",
+          "usageName": [
+            "OpenAI.GlobalStandard.gpt-4o,100"
+          ]
+        }
+      }
     },
     "deploymentType": {
       "type": "string",
@@ -113,13 +125,6 @@
       "defaultValue": 1,
       "metadata": {
         "description": "Maximum number of replicas to be added for Container Web App"
-      }
-    },
-    "useLocalBuild": {
-      "type": "string",
-      "defaultValue": "false",
-      "metadata": {
-        "description": "Set this flag to true only if you are deplpoying from Local"
       }
     },
     "existingLogAnalyticsWorkspaceId": {
@@ -368,8 +373,7 @@
     "solutionPrefix": "[format('cps-{0}', padLeft(take(variables('uniqueId'), 12), 12, '0'))]",
     "containerImageEndPoint": "cpscontainerreg.azurecr.io",
     "resourceGroupLocation": "[resourceGroup().location]",
-    "abbrs": "[variables('$fxv#0')]",
-    "useLocalBuildLower": "[toLower(parameters('useLocalBuild'))]"
+    "abbrs": "[variables('$fxv#0')]"
   },
   "resources": [
     {
@@ -681,86 +685,6 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "deploy_container_registry",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "environmentName": {
-            "value": "[parameters('environmentName')]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.36.1.42791",
-              "templateHash": "6955709595359352278"
-            }
-          },
-          "parameters": {
-            "environmentName": {
-              "type": "string"
-            },
-            "location": {
-              "type": "string",
-              "defaultValue": "[resourceGroup().location]",
-              "metadata": {
-                "description": "Provide a location for the registry."
-              }
-            },
-            "acrSku": {
-              "type": "string",
-              "defaultValue": "Basic",
-              "metadata": {
-                "description": "Provide a tier of your Azure Container Registry."
-              }
-            }
-          },
-          "variables": {
-            "uniqueId": "[toLower(uniqueString(subscription().id, parameters('environmentName'), resourceGroup().location))]",
-            "solutionName": "[format('cps-{0}', padLeft(take(variables('uniqueId'), 12), 12, '0'))]",
-            "containerNameCleaned": "[replace(format('cr{0}', variables('solutionName')), '-', '')]"
-          },
-          "resources": [
-            {
-              "type": "Microsoft.ContainerRegistry/registries",
-              "apiVersion": "2021-09-01",
-              "name": "[variables('containerNameCleaned')]",
-              "location": "[parameters('location')]",
-              "sku": {
-                "name": "[parameters('acrSku')]"
-              },
-              "properties": {
-                "publicNetworkAccess": "Enabled",
-                "zoneRedundancy": "Disabled"
-              }
-            }
-          ],
-          "outputs": {
-            "createdAcrName": {
-              "type": "string",
-              "value": "[variables('containerNameCleaned')]"
-            },
-            "createdAcrId": {
-              "type": "string",
-              "value": "[resourceId('Microsoft.ContainerRegistry/registries', variables('containerNameCleaned'))]"
-            },
-            "acrEndpoint": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.ContainerRegistry/registries', variables('containerNameCleaned')), '2021-09-01').loginServer]"
-            }
-          }
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
       "name": "deploy_storage_account",
       "properties": {
         "expressionEvaluationOptions": {
@@ -906,7 +830,7 @@
             "value": "[variables('solutionPrefix')]"
           },
           "solutionLocation": {
-            "value": "[variables('resourceGroupLocation')]"
+            "value": "[parameters('aiDeploymentsLocation')]"
           },
           "cuLocation": {
             "value": "[parameters('contentUnderstandingLocation')]"
@@ -1503,9 +1427,6 @@
           "maxReplicaContainerWeb": {
             "value": "[parameters('maxReplicaContainerWeb')]"
           },
-          "useLocalBuild": {
-            "value": "false"
-          },
           "imageTag": {
             "value": "latest"
           }
@@ -1517,7 +1438,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.36.1.42791",
-              "templateHash": "9208787367229886695"
+              "templateHash": "10338800926086953929"
             }
           },
           "parameters": {
@@ -1589,10 +1510,6 @@
             },
             "containerRegistryReaderId": {
               "type": "string"
-            },
-            "useLocalBuild": {
-              "type": "string",
-              "defaultValue": "false"
             },
             "imageTag": {
               "type": "string"
@@ -1913,9 +1830,6 @@
                   },
                   "maxReplicas": {
                     "value": "[parameters('maxReplicaContainerApp')]"
-                  },
-                  "useLocalBuild": {
-                    "value": "[parameters('useLocalBuild')]"
                   }
                 },
                 "template": {
@@ -1925,7 +1839,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.36.1.42791",
-                      "templateHash": "13562163699289922411"
+                      "templateHash": "8984863566776850276"
                     }
                   },
                   "parameters": {
@@ -1973,10 +1887,6 @@
                     "maxReplicas": {
                       "type": "int",
                       "defaultValue": 1
-                    },
-                    "useLocalBuild": {
-                      "type": "string",
-                      "defaultValue": "false"
                     }
                   },
                   "resources": [
@@ -1996,7 +1906,7 @@
                         "environmentId": "[parameters('containerEnvId')]",
                         "workloadProfileName": "Consumption",
                         "configuration": {
-                          "registries": "[if(equals(parameters('useLocalBuild'), 'true'), createArray(createObject('server', parameters('azureContainerRegistry'), 'identity', parameters('managedIdentityId'))), null())]",
+                          "registries": null,
                           "ingress": "[if(parameters('enableIngress'), createObject('external', true(), 'transport', 'auto', 'allowInsecure', true(), 'corsPolicy', if(greater(length(parameters('allowedOrigins')), 0), createObject('allowedOrigins', parameters('allowedOrigins'), 'allowedMethods', createArray('GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'), 'allowedHeaders', createArray('Authorization', 'Content-Type', '*')), null())), null())]"
                         },
                         "template": {
@@ -2093,9 +2003,6 @@
                   },
                   "maxReplicas": {
                     "value": "[parameters('maxReplicaContainerApi')]"
-                  },
-                  "useLocalBuild": {
-                    "value": "[parameters('useLocalBuild')]"
                   }
                 },
                 "template": {
@@ -2105,7 +2012,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.36.1.42791",
-                      "templateHash": "13562163699289922411"
+                      "templateHash": "8984863566776850276"
                     }
                   },
                   "parameters": {
@@ -2153,10 +2060,6 @@
                     "maxReplicas": {
                       "type": "int",
                       "defaultValue": 1
-                    },
-                    "useLocalBuild": {
-                      "type": "string",
-                      "defaultValue": "false"
                     }
                   },
                   "resources": [
@@ -2176,7 +2079,7 @@
                         "environmentId": "[parameters('containerEnvId')]",
                         "workloadProfileName": "Consumption",
                         "configuration": {
-                          "registries": "[if(equals(parameters('useLocalBuild'), 'true'), createArray(createObject('server', parameters('azureContainerRegistry'), 'identity', parameters('managedIdentityId'))), null())]",
+                          "registries": null,
                           "ingress": "[if(parameters('enableIngress'), createObject('external', true(), 'transport', 'auto', 'allowInsecure', true(), 'corsPolicy', if(greater(length(parameters('allowedOrigins')), 0), createObject('allowedOrigins', parameters('allowedOrigins'), 'allowedMethods', createArray('GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'), 'allowedHeaders', createArray('Authorization', 'Content-Type', '*')), null())), null())]"
                         },
                         "template": {
@@ -2285,9 +2188,6 @@
                   },
                   "maxReplicas": {
                     "value": "[parameters('maxReplicaContainerWeb')]"
-                  },
-                  "useLocalBuild": {
-                    "value": "[parameters('useLocalBuild')]"
                   }
                 },
                 "template": {
@@ -2297,7 +2197,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.36.1.42791",
-                      "templateHash": "13562163699289922411"
+                      "templateHash": "8984863566776850276"
                     }
                   },
                   "parameters": {
@@ -2345,10 +2245,6 @@
                     "maxReplicas": {
                       "type": "int",
                       "defaultValue": 1
-                    },
-                    "useLocalBuild": {
-                      "type": "string",
-                      "defaultValue": "false"
                     }
                   },
                   "resources": [
@@ -2368,7 +2264,7 @@
                         "environmentId": "[parameters('containerEnvId')]",
                         "workloadProfileName": "Consumption",
                         "configuration": {
-                          "registries": "[if(equals(parameters('useLocalBuild'), 'true'), createArray(createObject('server', parameters('azureContainerRegistry'), 'identity', parameters('managedIdentityId'))), null())]",
+                          "registries": null,
                           "ingress": "[if(parameters('enableIngress'), createObject('external', true(), 'transport', 'auto', 'allowInsecure', true(), 'corsPolicy', if(greater(length(parameters('allowedOrigins')), 0), createObject('allowedOrigins', parameters('allowedOrigins'), 'allowedMethods', createArray('GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'), 'allowedHeaders', createArray('Authorization', 'Content-Type', '*')), null())), null())]"
                         },
                         "template": {
@@ -2822,9 +2718,6 @@
           },
           "aiServiceId": {
             "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_ai_foundry'), '2022-09-01').outputs.aiServicesId.value]"
-          },
-          "containerRegistryReaderPrincipalId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_app_env'), '2022-09-01').outputs.containerRegistryReaderPrincipalId.value]"
           }
         },
         "template": {
@@ -2834,7 +2727,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.36.1.42791",
-              "templateHash": "4418232655579357592"
+              "templateHash": "1992580664978730799"
             }
           },
           "parameters": {
@@ -2860,9 +2753,6 @@
               "type": "string"
             },
             "aiServiceId": {
-              "type": "string"
-            },
-            "containerRegistryReaderPrincipalId": {
               "type": "string"
             }
           },
@@ -2963,15 +2853,6 @@
                 "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', 'a97b65f3-24c7-4388-baec-2e87135dc908')]",
                 "principalType": "ServicePrincipal"
               }
-            },
-            {
-              "type": "Microsoft.Authorization/roleAssignments",
-              "apiVersion": "2022-04-01",
-              "name": "[guid(parameters('containerRegistryReaderPrincipalId'), 'acrpull')]",
-              "properties": {
-                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
-                "principalId": "[parameters('containerRegistryReaderPrincipalId')]"
-              }
             }
           ]
         }
@@ -2979,7 +2860,6 @@
       "dependsOn": [
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_ai_foundry')]",
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_app_config_service')]",
-        "[resourceId('Microsoft.Resources/deployments', 'deploy_container_app_env')]",
         "[resourceId('Microsoft.Resources/deployments', 'deploy_container_app_api_web')]",
         "[resourceId('Microsoft.Resources/deployments', 'deploy_storage_account')]"
       ]
@@ -3000,7 +2880,9 @@
           "location": {
             "value": "[parameters('secondaryLocation')]"
           },
-          "azureContainerRegistry": "[if(equals(variables('useLocalBuildLower'), 'true'), createObject('value', reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_registry'), '2022-09-01').outputs.acrEndpoint.value), createObject('value', variables('containerImageEndPoint')))]",
+          "azureContainerRegistry": {
+            "value": "[variables('containerImageEndPoint')]"
+          },
           "appConfigEndPoint": {
             "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_app_config_service'), '2022-09-01').outputs.appConfigEndpoint.value]"
           },
@@ -3034,9 +2916,6 @@
           "maxReplicaContainerWeb": {
             "value": "[parameters('maxReplicaContainerWeb')]"
           },
-          "useLocalBuild": {
-            "value": "[variables('useLocalBuildLower')]"
-          },
           "imageTag": {
             "value": "[parameters('imageTag')]"
           }
@@ -3048,7 +2927,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.36.1.42791",
-              "templateHash": "9208787367229886695"
+              "templateHash": "10338800926086953929"
             }
           },
           "parameters": {
@@ -3120,10 +2999,6 @@
             },
             "containerRegistryReaderId": {
               "type": "string"
-            },
-            "useLocalBuild": {
-              "type": "string",
-              "defaultValue": "false"
             },
             "imageTag": {
               "type": "string"
@@ -3444,9 +3319,6 @@
                   },
                   "maxReplicas": {
                     "value": "[parameters('maxReplicaContainerApp')]"
-                  },
-                  "useLocalBuild": {
-                    "value": "[parameters('useLocalBuild')]"
                   }
                 },
                 "template": {
@@ -3456,7 +3328,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.36.1.42791",
-                      "templateHash": "13562163699289922411"
+                      "templateHash": "8984863566776850276"
                     }
                   },
                   "parameters": {
@@ -3504,10 +3376,6 @@
                     "maxReplicas": {
                       "type": "int",
                       "defaultValue": 1
-                    },
-                    "useLocalBuild": {
-                      "type": "string",
-                      "defaultValue": "false"
                     }
                   },
                   "resources": [
@@ -3527,7 +3395,7 @@
                         "environmentId": "[parameters('containerEnvId')]",
                         "workloadProfileName": "Consumption",
                         "configuration": {
-                          "registries": "[if(equals(parameters('useLocalBuild'), 'true'), createArray(createObject('server', parameters('azureContainerRegistry'), 'identity', parameters('managedIdentityId'))), null())]",
+                          "registries": null,
                           "ingress": "[if(parameters('enableIngress'), createObject('external', true(), 'transport', 'auto', 'allowInsecure', true(), 'corsPolicy', if(greater(length(parameters('allowedOrigins')), 0), createObject('allowedOrigins', parameters('allowedOrigins'), 'allowedMethods', createArray('GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'), 'allowedHeaders', createArray('Authorization', 'Content-Type', '*')), null())), null())]"
                         },
                         "template": {
@@ -3624,9 +3492,6 @@
                   },
                   "maxReplicas": {
                     "value": "[parameters('maxReplicaContainerApi')]"
-                  },
-                  "useLocalBuild": {
-                    "value": "[parameters('useLocalBuild')]"
                   }
                 },
                 "template": {
@@ -3636,7 +3501,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.36.1.42791",
-                      "templateHash": "13562163699289922411"
+                      "templateHash": "8984863566776850276"
                     }
                   },
                   "parameters": {
@@ -3684,10 +3549,6 @@
                     "maxReplicas": {
                       "type": "int",
                       "defaultValue": 1
-                    },
-                    "useLocalBuild": {
-                      "type": "string",
-                      "defaultValue": "false"
                     }
                   },
                   "resources": [
@@ -3707,7 +3568,7 @@
                         "environmentId": "[parameters('containerEnvId')]",
                         "workloadProfileName": "Consumption",
                         "configuration": {
-                          "registries": "[if(equals(parameters('useLocalBuild'), 'true'), createArray(createObject('server', parameters('azureContainerRegistry'), 'identity', parameters('managedIdentityId'))), null())]",
+                          "registries": null,
                           "ingress": "[if(parameters('enableIngress'), createObject('external', true(), 'transport', 'auto', 'allowInsecure', true(), 'corsPolicy', if(greater(length(parameters('allowedOrigins')), 0), createObject('allowedOrigins', parameters('allowedOrigins'), 'allowedMethods', createArray('GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'), 'allowedHeaders', createArray('Authorization', 'Content-Type', '*')), null())), null())]"
                         },
                         "template": {
@@ -3816,9 +3677,6 @@
                   },
                   "maxReplicas": {
                     "value": "[parameters('maxReplicaContainerWeb')]"
-                  },
-                  "useLocalBuild": {
-                    "value": "[parameters('useLocalBuild')]"
                   }
                 },
                 "template": {
@@ -3828,7 +3686,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.36.1.42791",
-                      "templateHash": "13562163699289922411"
+                      "templateHash": "8984863566776850276"
                     }
                   },
                   "parameters": {
@@ -3876,10 +3734,6 @@
                     "maxReplicas": {
                       "type": "int",
                       "defaultValue": 1
-                    },
-                    "useLocalBuild": {
-                      "type": "string",
-                      "defaultValue": "false"
                     }
                   },
                   "resources": [
@@ -3899,7 +3753,7 @@
                         "environmentId": "[parameters('containerEnvId')]",
                         "workloadProfileName": "Consumption",
                         "configuration": {
-                          "registries": "[if(equals(parameters('useLocalBuild'), 'true'), createArray(createObject('server', parameters('azureContainerRegistry'), 'identity', parameters('managedIdentityId'))), null())]",
+                          "registries": null,
                           "ingress": "[if(parameters('enableIngress'), createObject('external', true(), 'transport', 'auto', 'allowInsecure', true(), 'corsPolicy', if(greater(length(parameters('allowedOrigins')), 0), createObject('allowedOrigins', parameters('allowedOrigins'), 'allowedMethods', createArray('GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'), 'allowedHeaders', createArray('Authorization', 'Content-Type', '*')), null())), null())]"
                         },
                         "template": {
@@ -3985,7 +3839,6 @@
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_app_config_service')]",
         "[resourceId('Microsoft.Resources/deployments', 'deploy_container_app_env')]",
         "[resourceId('Microsoft.Resources/deployments', 'deploy_container_app_api_web')]",
-        "[resourceId('Microsoft.Resources/deployments', 'deploy_container_registry')]",
         "[resourceId('Microsoft.Resources/deployments', 'deploy_role_assignments')]"
       ]
     }
@@ -4003,9 +3856,25 @@
       "type": "string",
       "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_app_api_web'), '2022-09-01').outputs.containweAppWebEndPoint.value]"
     },
+    "CONTAINER_APP_NAME": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_app_api_web'), '2022-09-01').outputs.containerAppName.value]"
+    },
     "CONTAINER_API_APP_FQDN": {
       "type": "string",
       "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_app_api_web'), '2022-09-01').outputs.containweAppApiEndPoint.value]"
+    },
+    "CONTAINER_APP_USER_IDENTITY_ID": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_app_env'), '2022-09-01').outputs.containerRegistryReaderId.value]"
+    },
+    "CONTAINER_APP_USER_PRINCIPAL_ID": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deploy_container_app_env'), '2022-09-01').outputs.containerRegistryReaderPrincipalId.value]"
+    },
+    "AZURE_ENV_IMAGETAG": {
+      "type": "string",
+      "value": "[parameters('imageTag')]"
     }
   }
 }

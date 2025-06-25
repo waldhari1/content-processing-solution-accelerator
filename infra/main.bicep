@@ -20,7 +20,16 @@ param secondaryLocation string = 'EastUs2'
     type: 'location'
   }
 })
-param contentUnderstandingLocation string
+param contentUnderstandingLocation string = 'WestUS'
+
+@metadata({azd: {
+    type: 'location'
+    usageName: [
+      'OpenAI.GlobalStandard.gpt-4o,100'
+    ]
+  }
+})
+param aiDeploymentsLocation string
 
 @minLength(1)
 @description('GPT model deployment type:')
@@ -35,8 +44,6 @@ param gptModelName string = 'gpt-4o'
 
 @description('Version of the GPT model to deploy:')
 param gptModelVersion string = '2024-08-06'
-
-//var gptModelVersion = '2024-02-15-preview'
 
 @minValue(10)
 @description('Capacity of the GPT deployment:')
@@ -62,9 +69,6 @@ param minReplicaContainerWeb int = 1
 @description('Maximum number of replicas to be added for Container Web App')
 param maxReplicaContainerWeb int = 1
 
-@description('Set this flag to true only if you are deplpoying from Local')
-param useLocalBuild string = 'false'
-
 @description('Optional: Existing Log Analytics Workspace Resource ID')
 param existingLogAnalyticsWorkspaceId string = ''
 
@@ -75,9 +79,6 @@ var resourceGroupLocation = resourceGroup().location
 
 // Load the abbrevations file required to name the azure resources.
 var abbrs = loadJsonContent('./abbreviations.json')
-
-// Convert input to lowercase
-var useLocalBuildLower = toLower(useLocalBuild)
 
 // ========== Managed Identity ========== //
 module managedIdentityModule 'deploy_managed_identity.bicep' = {
@@ -111,13 +112,13 @@ module applicationInsights 'deploy_app_insights.bicep' = {
   }
 }
 
-// ========== Container Registry ========== //
-module containerRegistry 'deploy_container_registry.bicep' = {
-  name: 'deploy_container_registry'
-  params: {
-    environmentName: environmentName
-  }
-}
+// // ========== Container Registry ========== //
+// module containerRegistry 'deploy_container_registry.bicep' = {
+//   name: 'deploy_container_registry'
+//   params: {
+//     environmentName: environmentName
+//   }
+// }
 
 // ========== Storage Account ========== //
 module storage 'deploy_storage_account.bicep' = {
@@ -134,7 +135,7 @@ module aifoundry 'deploy_ai_foundry.bicep' = {
   name: 'deploy_ai_foundry'
   params: {
     solutionName: solutionPrefix
-    solutionLocation: resourceGroupLocation
+    solutionLocation: aiDeploymentsLocation
     cuLocation: contentUnderstandingLocation
     deploymentType: deploymentType
     gptModelName: gptModelName
@@ -173,7 +174,6 @@ module containerApps './container_app/deploy_container_app_api_web.bicep' = {
     maxReplicaContainerApi: maxReplicaContainerApi
     minReplicaContainerWeb: minReplicaContainerWeb
     maxReplicaContainerWeb: maxReplicaContainerWeb
-    useLocalBuild: 'false'
     imageTag: 'latest'
   }
 }
@@ -221,7 +221,6 @@ module roleAssignments 'deploy_role_assignments.bicep' = {
     containerAppPrincipalId: containerApps.outputs.containerAppPrincipalId
     aiServiceCUId: aifoundry.outputs.aiServicesCuId
     aiServiceId: aifoundry.outputs.aiServicesId
-    containerRegistryReaderPrincipalId: containerAppEnv.outputs.containerRegistryReaderPrincipalId
   }
 }
 
@@ -230,7 +229,7 @@ module updateContainerApp './container_app/deploy_container_app_api_web.bicep' =
   params: {
     solutionName: solutionPrefix
     location: secondaryLocation
-    azureContainerRegistry: useLocalBuildLower == 'true' ? containerRegistry.outputs.acrEndpoint : containerImageEndPoint
+    azureContainerRegistry: containerImageEndPoint
     appConfigEndPoint: appconfig.outputs.appConfigEndpoint
     containerAppEnvId: containerAppEnv.outputs.containerEnvId
     containerRegistryReaderId: containerAppEnv.outputs.containerRegistryReaderId
@@ -242,7 +241,6 @@ module updateContainerApp './container_app/deploy_container_app_api_web.bicep' =
     maxReplicaContainerApi: maxReplicaContainerApi
     minReplicaContainerWeb: minReplicaContainerWeb
     maxReplicaContainerWeb: maxReplicaContainerWeb
-    useLocalBuild: useLocalBuildLower
     imageTag: imageTag
   }
   dependsOn: [roleAssignments]
@@ -251,4 +249,8 @@ module updateContainerApp './container_app/deploy_container_app_api_web.bicep' =
 output CONTAINER_WEB_APP_NAME string = containerApps.outputs.containerAppWebName
 output CONTAINER_API_APP_NAME string = containerApps.outputs.containerAppApiName
 output CONTAINER_WEB_APP_FQDN string = containerApps.outputs.containweAppWebEndPoint
+output CONTAINER_APP_NAME string = containerApps.outputs.containerAppName
 output CONTAINER_API_APP_FQDN string = containerApps.outputs.containweAppApiEndPoint
+output CONTAINER_APP_USER_IDENTITY_ID string = containerAppEnv.outputs.containerRegistryReaderId
+output CONTAINER_APP_USER_PRINCIPAL_ID string = containerAppEnv.outputs.containerRegistryReaderPrincipalId
+output AZURE_ENV_IMAGETAG string = imageTag
