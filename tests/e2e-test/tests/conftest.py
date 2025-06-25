@@ -1,53 +1,121 @@
-import os
+"""
+Pytest configuration for browser-based testing with Playwright and HTML report customization.
+"""
+
+import io
+import atexit
+import logging
+from pathlib import Path
+from venv import logger
 
 import pytest
-from config.constants import URL
+from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
-from py.xml import html  # type: ignore
+
+from config.constants import URL
+
+# Global dictionary to store log streams for each test
+LOG_STREAMS = {}
 
 
 @pytest.fixture(scope="session")
 def login_logout():
-    # perform login and browser close once in a session
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, args=["--start-maximized"])
+    """
+    Fixture to launch the browser, log in, and yield the page object.
+    Closes the browser after the session ends.
+    """
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch(headless=False, args=["--start-maximized"])
         context = browser.new_context(no_viewport=True)
         context.set_default_timeout(80000)
         page = context.new_page()
-        # Navigate to the login URL
+
         page.goto(URL, wait_until="domcontentloaded")
-        # login to web url with username and password
+
+        # Uncomment and complete the following to enable login
         # login_page = LoginPage(page)
         # load_dotenv()
-        # login_page.authenticate(os.getenv('user_name'), os.getenv('pass_word'))
+        # login_page.authenticate(os.getenv("user_name"), os.getenv("pass_word"))
 
         yield page
-        # perform close the browser
+
         browser.close()
 
 
 @pytest.hookimpl(tryfirst=True)
-def pytest_html_report_title(report):
-    report.title = "Automation_Content_Processing"
+def pytest_runtest_setup(item):
+    """
+    Pytest hook to set up a log capture for each test.
+    """
+    stream = io.StringIO()
+    handler = logging.StreamHandler(stream)
+    handler.setLevel(logging.INFO)
+
+    logger = logging.getLogger()
+    logger.addHandler(handler)
+
+    LOG_STREAMS[item.nodeid] = (handler, stream)
 
 
-# Add a column for descriptions
-def pytest_html_results_table_header(cells):
-    cells.insert(1, html.th("Description"))
-
-
-def pytest_html_results_table_row(report, cells):
-    cells.insert(
-        1, html.td(report.description if hasattr(report, "description") else "")
-    )
-
-
-# Add logs and docstring to report
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
+    """
+    Pytest hook to add captured logs to the test report.
+    """
     outcome = yield
     report = outcome.get_result()
-    report.description = str(item.function.__doc__)
-    os.makedirs("logs", exist_ok=True)
-    extra = getattr(report, "extra", [])
-    report.extra = extra
+
+    handler, stream = LOG_STREAMS.get(item.nodeid, (None, None))
+
+    if handler and stream:
+        handler.flush()
+        log_output = stream.getvalue()
+
+        logger = logging.getLogger()
+        logger.removeHandler(handler)
+
+        report.description = f"<pre>{log_output.strip()}</pre>"
+
+        LOG_STREAMS.pop(item.nodeid, None)
+    else:
+        report.description = ""
+
+
+def pytest_collection_modifyitems(items):
+    """
+    Modify test node IDs based on the test's parameterized 'prompt' value.
+    """
+    for item in items:
+        if hasattr(item, "callspec"):
+            prompt = item.callspec.params.get("prompt")
+            if prompt:
+                item._nodeid = prompt
+
+
+def rename_duration_column():
+    """
+    Modify the HTML report to rename 'Duration' column to 'Execution Time'.
+    Runs automatically after the test session.
+    """
+    report_path = Path("report.html")
+    if not report_path.exists():
+        logger.info("Report file not found, skipping column rename.")
+        return
+
+    with report_path.open("r", encoding="utf-8") as file:
+        soup = BeautifulSoup(file, "html.parser")
+
+    headers = soup.select("table#results-table thead th")
+    for th in headers:
+        if th.text.strip() == "Duration":
+            th.string = "Execution Time"
+            break
+    else:
+        print("'Duration' column not found in report.")
+
+    with report_path.open("w", encoding="utf-8") as file:
+        file.write(str(soup))
+
+
+# Register HTML report column modification
+atexit.register(rename_duration_column)
