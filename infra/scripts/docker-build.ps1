@@ -2,6 +2,15 @@
 # Get all environment values
 $envValues = azd env get-values --output json | ConvertFrom-Json
 
+# Full path to this script's folder
+$ScriptDir = $PSScriptRoot
+
+# Resolve relative paths based on the script location
+$TemplateFile = Join-Path $ScriptDir "..\deploy_container_registry.bicep"
+$ContentProcessorPath = Join-Path $ScriptDir "..\..\src\ContentProcessor"
+$ContentApiPath = Join-Path $ScriptDir "..\..\src\ContentProcessorAPI"
+$ContentWebPath = Join-Path $ScriptDir "..\..\src\ContentProcessorWeb"
+
 # Define function to build and push Docker images
 function Build-And-Push-Image {
     param (
@@ -110,7 +119,7 @@ Write-Output "Starting build process."
 
 # Deploy container registry
 Write-Host "Deploying container registry"
-$OUTPUTS = az deployment group create --resource-group $AZURE_RESOURCE_GROUP --template-file "./infra/deploy_container_registry.bicep" --parameters environmentName=$ENV_NAME acrPullPrincipalIds="['$($CONTAINER_APP_USER_PRINCIPAL_ID)']" --query "properties.outputs" --output json | ConvertFrom-Json
+$OUTPUTS = az deployment group create --resource-group $AZURE_RESOURCE_GROUP --template-file "$TemplateFile" --parameters environmentName=$ENV_NAME acrPullPrincipalIds="['$($CONTAINER_APP_USER_PRINCIPAL_ID)']" --query "properties.outputs" --output json | ConvertFrom-Json
 
 # Extract ACR name and endpoint
 $ACR_NAME = $OUTPUTS.createdAcrName.value
@@ -134,8 +143,8 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 # Build and push images
-Build-And-Push-Image "contentprocessor" ".\src\ContentProcessor\" $CONTAINER_APP_NAME
-Build-And-Push-Image "contentprocessorapi" ".\src\ContentProcessorAPI\" $CONTAINER_API_APP_NAME
-Build-And-Push-Image "contentprocessorweb" ".\src\ContentProcessorWeb\" $CONTAINER_WEB_APP_NAME
+Build-And-Push-Image "contentprocessor" "$ContentProcessorPath" $CONTAINER_APP_NAME
+Build-And-Push-Image "contentprocessorapi" "$ContentApiPath" $CONTAINER_API_APP_NAME
+Build-And-Push-Image "contentprocessorweb" "$ContentWebPath" $CONTAINER_WEB_APP_NAME
 
 Write-Host "All Docker images built and pushed successfully."

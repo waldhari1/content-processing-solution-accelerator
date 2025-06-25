@@ -6,6 +6,9 @@ set -e
 echo "Fetching environment values from azd..."
 ENV_VALUES_JSON=$(azd env get-values --output json)
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEMPLATE_FILE="$SCRIPT_DIR/../deploy_container_registry.bicep"
+
 get_azd_env_value_or_default() {
     local key="$1"
     local default="$2"
@@ -54,7 +57,7 @@ fi
 echo "Deploying container registry..."
 DEPLOY_OUTPUT=$(az deployment group create \
     --resource-group "$AZURE_RESOURCE_GROUP" \
-    --template-file "./infra/deploy_container_registry.bicep" \
+    --template-file "$TEMPLATE_FILE" \
     --parameters environmentName="$ENV_NAME" acrPullPrincipalIds="['$CONTAINER_APP_USER_PRINCIPAL_ID']" \
     --query "properties.outputs" \
     --output json)
@@ -104,8 +107,10 @@ build_and_push_image() {
 }
 
 # Build and push all images
-build_and_push_image "contentprocessor" "./src/ContentProcessor/" "$CONTAINER_APP_NAME"
-build_and_push_image "contentprocessorapi" "./src/ContentProcessorAPI/" "$CONTAINER_API_APP_NAME"
-build_and_push_image "contentprocessorweb" "./src/ContentProcessorWeb/" "$CONTAINER_WEB_APP_NAME"
+build_and_push_image "contentprocessor" "$SCRIPT_DIR/../../src/ContentProcessor/" "$CONTAINER_APP_NAME"
+
+build_and_push_image "contentprocessorapi" "$SCRIPT_DIR/../../src/ContentProcessorAPI/" "$CONTAINER_API_APP_NAME"
+
+build_and_push_image "contentprocessorweb" "$SCRIPT_DIR/../../src/ContentProcessorWeb/" "$CONTAINER_WEB_APP_NAME"
 
 echo "All Docker images built and pushed successfully."
