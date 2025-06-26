@@ -173,40 +173,37 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
     - This deployment will take *4-6 minutes* to provision the resources in your account and set up the solution with sample data.
     - If you encounter an error or timeout during deployment, changing the location may help, as there could be availability constraints for the resources.
 
-5. Once the deployment has completed successfully, open the [Azure Portal](https://portal.azure.com/), go to the deployed resource group, find the App Service, and get the app URL from `Default domain`.
+5. Once the deployment has completed successfully:
+    > Please check the terminal or console output for details of the successful deployment. It will display the Name, Endpoint (Application URL), and Azure Portal URL for both the Web and API Azure Container Apps.
 
-6. If you are done trying out the application, you can delete the resources by running `azd down`.
+    ![](./images/cp-post-deployment.png)
 
-### Publishing Local Build Container to Azure Container Registry
+    - You can find the Azure portal link in the screenshot above. Click on it to navigate to the corresponding resource group in the Azure portal.
 
-If you need to rebuild the source code and push the updated container to the deployed Azure Container Registry, follow these steps:
+    > #### Important Note : Before accessing the application, ensure that all **[Post Deployment Steps](#post-deployment-steps)** are fully completed, as they are critical for the proper configuration of **Data Ingestion** and **Authentication** functionalities.
 
-1. Set the environment variable `USE_LOCAL_BUILD` to `True`:
+7. If you are done trying out the application, you can delete the resources by running `azd down`.
+
+## Post Deployment Steps
+1. Optional: Publishing Local Build Container to Azure Container Registry 
+
+   If you need to rebuild the source code and push the updated container to the deployed Azure Container Registry, follow these steps:
 
    - **Linux/macOS**:
      ```bash
-     export USE_LOCAL_BUILD=True
+     cd ./infra/scripts/
+     ./docker-build.sh
      ```
 
    - **Windows (PowerShell)**:
      ```powershell
-     $env:USE_LOCAL_BUILD = $true
+     cd .\infra\scripts\
+     .\docker-build.ps1
      ```
-2. Run the `az login` command
-   ```bash
-   az login
-   ```
 
-3. Run the `azd up` command again to rebuild and push the updated container:
-   ```bash
-   azd up
-   ```
+    This will create a new Azure Container Registry, rebuild the source code, package it into a container, and push it to the Container Registry created.
 
-This will rebuild the source code, package it into a container, and push it to the Azure Container Registry associated with your deployment.
-
-## Post Deployment Steps
-
-1. **Register Schema Files**
+2. **Register Schema Files**
 
      > Want to customize the schemas for your own documents? [Learn more about adding your own schemas here.](./CustomizeSchemaData.md)
 
@@ -236,7 +233,7 @@ This will rebuild the source code, package it into a container, and push it to t
     - **Verify Results**
         ![schema file registration](./images/SchemaFileRegistration.png)  
 
-2. **Import Sample Data**  
+3. **Import Sample Data**  
     - Grab the Schema IDs for Invoice and Property Damage Claim Form's Schema from first step
     - Move to the folder location to samples in ContentProcessorApi - [/src/ContentProcessorApi/samples/](/src/ContentProcessorApi/samples/)
     - Execute the script with Schema IDs  
