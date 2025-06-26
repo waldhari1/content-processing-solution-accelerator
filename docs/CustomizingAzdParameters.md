@@ -16,7 +16,6 @@ By default this template will use the environment name as the prefix to prevent 
 | `AZURE_ENV_MODEL_NAME`                 | string  | `gpt-4o`                  | Specifies the GPT model name (allowed values: `gpt-4o`).       
 | `AZURE_ENV_MODEL_VERSION`                 | string  | `2024-08-06`                  | Specifies the GPT model version (allowed values: `2024-08-06`).                       |
 | `AZURE_ENV_MODEL_CAPACITY`             | integer | `30`                        | Sets the model capacity (choose based on your subscription's available GPT capacity). |
-| `USE_LOCAL_BUILD`                      | boolean | `false`                     | Indicates whether to use a local container build for deployment.                      |
 | `AZURE_ENV_IMAGETAG`                      | boolean | `latest`                     | Set the Image tag Like (allowed values: latest, dev, hotfix)                       |
 | `AZURE_ENV_LOG_ANALYTICS_WORKSPACE_ID` | string  | `<Existing Workspace Id>` | Reuses an existing Log Analytics Workspace instead of provisioning a new one.         |
 
