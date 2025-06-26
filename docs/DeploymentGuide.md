@@ -184,36 +184,26 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
 
 7. If you are done trying out the application, you can delete the resources by running `azd down`.
 
-### Publishing Local Build Container to Azure Container Registry
+## Post Deployment Steps
+1. Optional: Publishing Local Build Container to Azure Container Registry 
 
-If you need to rebuild the source code and push the updated container to the deployed Azure Container Registry, follow these steps:
-
-1. Set the environment variable `USE_LOCAL_BUILD` to `True`:
+   If you need to rebuild the source code and push the updated container to the deployed Azure Container Registry, follow these steps:
 
    - **Linux/macOS**:
      ```bash
-     export USE_LOCAL_BUILD=True
+     cd ./infra/scripts/
+     ./docker-build.sh
      ```
 
    - **Windows (PowerShell)**:
      ```powershell
-     $env:USE_LOCAL_BUILD = $true
+     cd .\infra\scripts\
+     .\docker-build.ps1
      ```
-2. Run the `az login` command
-   ```bash
-   az login
-   ```
 
-3. Run the `azd up` command again to rebuild and push the updated container:
-   ```bash
-   azd up
-   ```
+    This will create a new Azure Container Registry, rebuild the source code, package it into a container, and push it to the Container Registry created.
 
-This will rebuild the source code, package it into a container, and push it to the Azure Container Registry associated with your deployment.
-
-## Post Deployment Steps
-
-1. **Register Schema Files**
+2. **Register Schema Files**
 
      > Want to customize the schemas for your own documents? [Learn more about adding your own schemas here.](./CustomizeSchemaData.md)
 
@@ -243,7 +233,7 @@ This will rebuild the source code, package it into a container, and push it to t
     - **Verify Results**
         ![schema file registration](./images/SchemaFileRegistration.png)  
 
-2. **Import Sample Data**  
+3. **Import Sample Data**  
     - Grab the Schema IDs for Invoice and Property Damage Claim Form's Schema from first step
     - Move to the folder location to samples in ContentProcessorApi - [/src/ContentProcessorApi/samples/](/src/ContentProcessorApi/samples/)
     - Execute the script with Schema IDs  
